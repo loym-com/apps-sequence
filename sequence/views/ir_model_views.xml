@@ -6,9 +6,8 @@
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
             <field name="modules" position="after">
-                <field name="id" />
-                <!-- <field name="sequence_code_field_id" groups="base.group_no_one" /> -->
-                <!-- <field name="sequence_selection_field_id" groups="base.group_no_one" /> -->
+                <field name="sequence_code_field_id" groups="base.group_no_one" />
+                <field name="sequence_selection_field_id" groups="base.group_no_one" />
             </field>
         </field>
     </record>
