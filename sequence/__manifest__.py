@@ -3,14 +3,13 @@
 
 {
     "name": "Sequence",
-    "summary": "Model: 2 fields for sequence management",
+    "summary": "Each record may have a sequence code",
     "author": "Loym AS",
-    "category": "Productivity",
     "data": [
         "views/ir_model_views.xml",
     ],
     "depends": ["base"],
     "license": "AGPL-3",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "website": "https://www.loym.com",
 }
