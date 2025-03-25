@@ -1,1 +1,1 @@
-Have multiple project sequences, depending on a project field (selection/boolean).
+With this module, each record may have a sequence code.

@@ -76,25 +76,35 @@ class TestSequence(TransactionCase):
 
     def test_3_sequence_2s(self):
         self.model_2s = self.env.ref("base.model_res_lang")
-        # Count sequences
+        # Count sequences and actions
         Sequence = self.env["ir.sequence"]
-        count1 = Sequence.search_count([])
+        Action = self.env["ir.action.server"]
+        seq_count1 = Sequence.search_count([])
+        act_count1 = Action.search_count([])
         self.model_2s.sequence_code_field_id = self._get_field(self.model_2s.id, "iso_code").id
-        count2 = Sequence.search_count([])
-        self.assertEqual(count1 + 1, count2)
+        seq_count2 = Sequence.search_count([])
+        act_count2 = Action.search_count([])
+        self.assertEqual(seq_count1 + 1, seq_count2)
+        self.assertEqual(act_count1 + 1, act_count2)
+        self.model_2s.sequence_code_field_id = False
+        self.model_2s.sequence_code_field_id = self._get_field(self.model_2s.id, "iso_code").id
+        act_count3 = Action.search_count([])
+        self.assertEqual(act_count2, act_count3, "Action should exist already and not be created again.")
         self.model_2s.sequence_selection_field_id = self._get_field(self.model_2s.id, "direction").id
-        count3 = Sequence.search_count([])
-        self.assertEqual(count2 + 2, count3)
+        seq_count3 = Sequence.search_count([])
+        self.assertEqual(seq_count2 + 2, seq_count3)
         self.model_2s.sequence_selection_field_id = False
-        count4 = Sequence.search_count([])
-        self.assertEqual(count3, count4)
+        seq_count4 = Sequence.search_count([])
+        self.assertEqual(seq_count3, seq_count4)
         self.model_2s.sequence_selection_field_id = self._get_field(self.model_2s.id, "direction").id
-        count5 = Sequence.search_count([])
-        self.assertEqual(count4, count5)
+        seq_count5 = Sequence.search_count([])
+        self.assertEqual(seq_count4, seq_count5, "Sequences should exist already and not be created again.")
         # Regular tests
         test2s = self.env[self.model_2s.model].create(
             {"name": "Test Language", "direction": "ltr", "code": "test"}
         )
+        self.assertEqual(test2s.iso_code, "ltr-00001")
+        test2s.sequence_code_set()
         self.assertEqual(test2s.iso_code, "ltr-00001")
         test2s.iso_code = ""
         self.assertEqual(test2s.iso_code, "")

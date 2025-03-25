@@ -1,7 +1,9 @@
 To set a project field that will determine the project sequence, follow these steps:
 
-1. Go to *Project \> Configuration \> Settings*.
-2. Set a *Project Sequence Field*.
-3. Click on Save. A sequence will be created for each field option.
-4. Under *Project Sequence Field*, click the link to see the sequences.
-5. Customize the sequences.
+1. Go to *Settings \> Technical \> Database Structure \> Models*.
+2. Click on a model to open it.
+3. Set a *Sequence Code Field* - the field to store the sequence code.
+4. Set a *Sequence Selection Field* (optional) - if you want multiple sequences.
+5. Click on Save. A sequence will be created, or a sequence for each selection field option.
+6. Go to *Settings \> Technical \> Sequences & Identifiers \> Sequences*.
+7. Customize the sequences.

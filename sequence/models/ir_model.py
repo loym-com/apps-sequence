@@ -14,20 +14,12 @@ class IrModel(models.Model):
     sequence_code_field_id = fields.Many2one(
         string="Sequence Code Field",
         comodel_name="ir.model.fields",
-        domain=lambda self: [
-            ("model_id", "=", self.id),
-            ("required", "=", True),
-            ("ttype", "in", ["char"]),
-        ],
+        domain="[('id', 'in', field_id), ('ttype', 'in', ['char', 'text'])]",
     )
     sequence_selection_field_id = fields.Many2one(
         string="Sequence Selection Field",
         comodel_name="ir.model.fields",
-        domain=lambda self: [
-            ("model_id", "=", self.id),
-            ("required", "=", True),
-            ("ttype", "=", ["boolean", "many2one", "selection"]),
-        ],
+        domain="[('id', 'in', field_id), ('ttype', 'in', ['boolean', 'many2one', 'selection'])]",
     )
 
     @api.constrains("sequence_code_field_id", "sequence_selection_field_id")
@@ -84,17 +76,18 @@ class IrModel(models.Model):
                         ("binding_model_id", "=", model.id),
                         ("usage", "=", "ir_actions_server"),
                         ("state", "=", "code"),
-                        ("name", "=", "Set Sequence"),
+                        ("code", "=", "for rec in records:\n  rec.sequence_code_set()"),
                     ]
                 )
                 if not action:
+                    name = f"Set {model.sequence_code_field_id.field_description}"
                     Action.create(
                         {
                             "model_id": model.id,
                             "binding_model_id": model.id,
                             "usage": "ir_actions_server",
                             "state": "code",
-                            "name": "Set Sequence",
-                            "code": "for rec in records:\n    rec.sequence_code_set()"
+                            "name": name,
+                            "code": "for rec in records:\n  rec.sequence_code_set()"
                         }
                     )

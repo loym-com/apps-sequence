@@ -62,5 +62,6 @@ class Base(models.AbstractModel):
                         vals[code_field.name] = _get_sequence_code(vals)
             else:
                 for rec in self:
-                    setattr(rec, code_field.name, _get_sequence_code(rec))
+                    if not getattr(rec, code_field.name):
+                        setattr(rec, code_field.name, _get_sequence_code(rec))
         return vals_list
