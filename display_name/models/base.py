@@ -12,10 +12,14 @@ class Base(models.AbstractModel):
         return r"%\((\w+)\)s"
 
     def _get_display_name_pattern(self):
-        pattern = self.env["ir.model"].search_read(
-            domain=[("model", "=", self._name)], fields=["display_name_pattern"]
-        )[0].get("display_name_pattern")
-        return pattern or ""
+        try:
+            pattern = self.env["ir.model"].search_read(
+                domain=[("model", "=", self._name)], fields=["display_name_pattern"]
+            )[0].get("display_name_pattern")
+            return pattern or ""
+        except IndexError:
+            # This error occurs when installing a new addon.
+            return ""
 
     def _get_display_name_fields(self):
         fields = re.findall(
