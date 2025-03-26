@@ -1,3 +1,4 @@
+import psycopg2
 import re
 
 from odoo import api, models
@@ -12,14 +13,28 @@ class Base(models.AbstractModel):
         return r"%\((\w+)\)s"
 
     def _get_display_name_pattern(self):
-        try:
-            pattern = self.env["ir.model"].search_read(
-                domain=[("model", "=", self._name)], fields=["display_name_pattern"]
-            )[0].get("display_name_pattern")
-            return pattern or ""
-        except IndexError:
-            # This error occurs when installing a new addon.
+        # Just one database call to get display_name_pattern if it exists
+
+        # Execute the query to fetch all columns for the current model
+        self.env.cr.execute("""
+            SELECT *
+            FROM ir_model
+            WHERE model = %s
+        """, (self._name,))
+        result = self.env.cr.fetchone()
+
+        # If no result is found, return an empty string
+        if not result:
             return ""
+
+        # Get column names from the cursor description
+        column_names = [desc[0] for desc in self.env.cr.description]
+
+        # Convert the result into a dictionary
+        result_dict = dict(zip(column_names, result))
+
+        # Return the display_name_pattern if it exists, otherwise return ""
+        return result_dict.get("display_name_pattern", "") or ""
 
     def _get_display_name_fields(self):
         fields = re.findall(
