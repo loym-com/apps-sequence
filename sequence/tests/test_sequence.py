@@ -13,100 +13,124 @@ class TestSequence(TransactionCase):
             [("model_id", "=", model_id), ("name", "=", field_name)]
         ).ensure_one()
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        # normal
-        cls.model_0 = cls.env.ref("base.model_ir_attachment")
-        # code
-        cls.model_1 = cls.env.ref("base.model_res_partner_title")
-        cls.model_1.sequence_code_field_id = cls._get_field(cls.model_1.id, "shortcut").id
-        # code, boolean
-        cls.model_2b = cls.env.ref("base.model_res_groups")
-        cls.model_2b.sequence_code_field_id = cls._get_field(cls.model_2b.id, "comment").id
-        cls.model_2b.sequence_selection_field_id = cls._get_field(cls.model_2b.id, "share").id
-        # code, many2one
-        cls.model_2m = cls.env.ref("base.model_res_partner")
-        cls.model_2m.sequence_code_field_id = cls._get_field(cls.model_2m.id, "ref").id
-        cls.model_2m.sequence_selection_field_id = cls._get_field(cls.model_2m.id, "title").id
-        # code, selection - see test_3_sequence_selection
+    def test_0_sequence(self):
+        model = self.env.ref("base.model_ir_attachment")
+        record = self.env[model.model].create({"name": "Test Attachment"})
+        self.assertEqual(record.name, "Test Attachment")
 
     def test_1_action(self):
+        model = self.env.ref("base.model_res_partner_title")
+        model.sequence_code_field_id = self._get_field(model.id, "shortcut").id
         action = self.env["ir.actions.server"].search(
             [
-                ("model_id", "=", self.model_1.id),
-                ("binding_model_id", "=", self.model_1.id),
+                ("model_id", "=", model.id),
+                ("binding_model_id", "=", model.id),
                 ("usage", "=", "ir_actions_server"),
                 ("state", "=", "code"),
-                ("name", "=", "Set Sequence"),
+                ("code", "=", "for rec in records:\n  rec.sequence_code_set()"),
             ]
         )
         self.assertTrue(action)
 
-    def test_2_sequences(self):
-        _logger.info(f"test_2_sequences: self.model_0.model = {self.model_0.model}")
-        test0 = self.env[self.model_0.model].create({"name": "Test Attachment"})
-        self.assertEqual(test0.name, "Test Attachment")
+    def test_1_secuence(self):
+        model = self.env.ref("base.model_res_partner_title")
+        model.sequence_code_field_id = self._get_field(model.id, "shortcut").id
+        record = self.env[model.model].create({"name": "Test Partner Title"})
+        self.assertEqual(record.shortcut, "title-00001")
+        record.shortcut = ""
+        self.assertEqual(record.shortcut, "")
+        record.sequence_code_set()
+        self.assertEqual(record.shortcut, "title-00002")
 
-        test1 = self.env[self.model_1.model].create({"name": "Test Partner Title"})
-        self.assertEqual(test1.shortcut, "title-00001")
-        test1.shortcut = ""
-        self.assertEqual(test1.shortcut, "")
-        test1.sequence_code_set()
-        self.assertEqual(test1.shortcut, "title-00002")
-
-        test2b = self.env[self.model_2b.model].create(
+    def test_2_multi_boolean(self):
+        model = self.env.ref("base.model_res_groups")
+        model.sequence_code_field_id = self._get_field(model.id, "comment").id
+        model.sequence_selection_field_id = self._get_field(model.id, "share").id
+        record = self.env[model.model].create(
             {"name": "Test Group", "share": False}
         )
-        self.assertEqual(test2b.comment, "False-00001")
-        test2b.comment = ""
-        self.assertEqual(test2b.comment, "")
-        test2b.sequence_code_set()
-        self.assertEqual(test2b.comment, "False-00002")
+        self.assertEqual(record.comment, "False-00001")
+        record.comment = ""
+        self.assertEqual(record.comment, "")
+        record.sequence_code_set()
+        self.assertEqual(record.comment, "False-00002")
 
+    def test_2_multi_many2one(self):
+        model = self.env.ref("base.model_res_partner")
+        model.sequence_code_field_id = self._get_field(model.id, "ref").id
+        model.sequence_selection_field_id = self._get_field(model.id, "title").id
         title = self.env.ref("base.res_partner_title_madam")
-        test2m = self.env[self.model_2m.model].create(
+        record = self.env[model.model].create(
             {"name": "Test Contact", "title": title.id}
         )
-        self.assertEqual(test2m.ref, f"{title.id}-00001")
-        test2m.ref = ""
-        self.assertEqual(test2m.ref, "")
-        test2m.sequence_code_set()
-        self.assertEqual(test2m.ref, f"{title.id}-00002")
+        self.assertEqual(record.ref, f"{title.id}-00001")
+        record.ref = ""
+        self.assertEqual(record.ref, "")
+        record.sequence_code_set()
+        self.assertEqual(record.ref, f"{title.id}-00002")
 
-    def test_3_sequence_2s(self):
-        self.model_2s = self.env.ref("base.model_res_lang")
-        # Count sequences and actions
+    def test_2_multi_selection(self):
+        model = self.env.ref("base.model_res_lang")
+        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
+        model.sequence_selection_field_id = self._get_field(model.id, "direction").id
+        record = self.env[model.model].create(
+            {"name": "Test Language", "direction": "ltr", "code": "test"}
+        )
+        self.assertEqual(record.iso_code, "ltr-00001")
+        record.iso_code = ""
+        self.assertEqual(record.iso_code, "")
+        record.sequence_code_set()
+        self.assertEqual(record.iso_code, "ltr-00002")
+
+    def test_count_sequences_and_actions(self):
         Sequence = self.env["ir.sequence"]
-        Action = self.env["ir.action.server"]
+        Action = self.env["ir.actions.server"]
         seq_count1 = Sequence.search_count([])
         act_count1 = Action.search_count([])
-        self.model_2s.sequence_code_field_id = self._get_field(self.model_2s.id, "iso_code").id
+        # test_2_multi_selection with counting
+        model = self.env.ref("base.model_res_lang")
+        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
         seq_count2 = Sequence.search_count([])
         act_count2 = Action.search_count([])
         self.assertEqual(seq_count1 + 1, seq_count2)
         self.assertEqual(act_count1 + 1, act_count2)
-        self.model_2s.sequence_code_field_id = False
-        self.model_2s.sequence_code_field_id = self._get_field(self.model_2s.id, "iso_code").id
+        model.sequence_code_field_id = False
+        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
         act_count3 = Action.search_count([])
         self.assertEqual(act_count2, act_count3, "Action should exist already and not be created again.")
-        self.model_2s.sequence_selection_field_id = self._get_field(self.model_2s.id, "direction").id
+        model.sequence_selection_field_id = self._get_field(model.id, "direction").id
         seq_count3 = Sequence.search_count([])
         self.assertEqual(seq_count2 + 2, seq_count3)
-        self.model_2s.sequence_selection_field_id = False
+        model.sequence_selection_field_id = False
         seq_count4 = Sequence.search_count([])
         self.assertEqual(seq_count3, seq_count4)
-        self.model_2s.sequence_selection_field_id = self._get_field(self.model_2s.id, "direction").id
+        model.sequence_selection_field_id = self._get_field(model.id, "direction").id
         seq_count5 = Sequence.search_count([])
         self.assertEqual(seq_count4, seq_count5, "Sequences should exist already and not be created again.")
-        # Regular tests
-        test2s = self.env[self.model_2s.model].create(
+
+    def test_no_change_of_existing_sequence_code(self):
+        # test_2_multi_selection copy
+        model = self.env.ref("base.model_res_lang")
+        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
+        model.sequence_selection_field_id = self._get_field(model.id, "direction").id
+        record = self.env[model.model].create(
             {"name": "Test Language", "direction": "ltr", "code": "test"}
         )
-        self.assertEqual(test2s.iso_code, "ltr-00001")
-        test2s.sequence_code_set()
-        self.assertEqual(test2s.iso_code, "ltr-00001")
-        test2s.iso_code = ""
-        self.assertEqual(test2s.iso_code, "")
-        test2s.sequence_code_set()
-        self.assertEqual(test2s.iso_code, "ltr-00002")
+        self.assertEqual(record.iso_code, "ltr-00001")
+        # New test
+        record.sequence_code_set()
+        self.assertEqual(record.iso_code, "ltr-00001")
+
+    def test_no_name_get_sequence_code(self):
+        # test_2_multi_many2one copy
+        model = self.env.ref("base.model_res_partner")
+        model.sequence_code_field_id = self._get_field(model.id, "ref").id
+        model.sequence_selection_field_id = self._get_field(model.id, "title").id
+        title = self.env.ref("base.res_partner_title_madam")
+        # No name
+        record = self.env[model.model].create(
+            {"type": "other", "title": title.id}
+        )
+        self.assertEqual(record.name, f"{title.id}-00001")
+
+    # TODO: test sequence.mixin

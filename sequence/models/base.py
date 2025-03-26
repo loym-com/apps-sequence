@@ -57,6 +57,9 @@ class Base(models.AbstractModel):
                 for vals in vals_list:
                     if code_field.name not in vals:
                         vals[code_field.name] = _get_sequence_code(vals)
+                        # If no name, set name = sequence code
+                        if "name" in self._fields and "name" not in vals:
+                            vals["name"] = vals[code_field.name]
             else:
                 for rec in self:
                     if not getattr(rec, code_field.name):
