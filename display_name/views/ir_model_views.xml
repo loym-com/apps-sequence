@@ -8,7 +8,7 @@
             <field name="modules" position="after">
                 <field
                     name="display_name_pattern"
-                    placeholder="%(id)s - %(name)s"
+                    placeholder="%%(id)s - %%(name)s"
                     groups="base.group_no_one"
                 />
             </field>

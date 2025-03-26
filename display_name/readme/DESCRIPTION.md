@@ -1,1 +1,1 @@
-With this module, each record may have a sequence code.
+With this module, each model may have a custom display_name.
