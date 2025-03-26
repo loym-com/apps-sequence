@@ -22,14 +22,11 @@ class Base(models.AbstractModel):
 
     def sequence_code_set(self, vals_list=None):
         """
-        # If code_field:
-        #   If vals_list:
-        #       create ->
-        #           - sequence_code_set
-        #           - super(create)
-        #           - sequence_code_run_extra_action
-        #   Else:
-        #       sequence_code_set -> write -> sequence_code_run_extra_action"
+        # if code_field:
+        #   if vals_list:
+        #       create
+        #   else:
+        #       write
         """
         info = self.sequence_code_get_model_info()
 

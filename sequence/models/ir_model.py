@@ -12,12 +12,13 @@ class IrModel(models.Model):
     _inherit = "ir.model"
 
     sequence_code_field_id = fields.Many2one(
-        string="Sequence Code Field",
+        string="Store sequence in",
         comodel_name="ir.model.fields",
         domain="[('id', 'in', field_id), ('ttype', 'in', ['char', 'text'])]",
+        help="A new record will get a sequence code except if the user can set a value."
     )
     sequence_selection_field_id = fields.Many2one(
-        string="Sequence Selection Field",
+        string="A sequence for each",
         comodel_name="ir.model.fields",
         domain="[('id', 'in', field_id), ('ttype', 'in', ['boolean', 'many2one', 'selection'])]",
     )
