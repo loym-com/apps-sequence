@@ -17,7 +17,7 @@ class Base(models.AbstractModel):
     def sequence_code_get_model_info(self):
         domain = [("model", "=", self._name)]
         fields = ["sequence_code_field_id", "sequence_selection_field_id"]
-        info = self.env["ir.model"].search_read(domain=domain, fields=fields)[0]
+        info = self.env["ir.model"].sudo().search_read(domain=domain, fields=fields)[0]
         return info
 
     def sequence_code_set(self, vals_list=None):
@@ -58,10 +58,13 @@ class Base(models.AbstractModel):
                     if code_field.name not in vals:
                         vals[code_field.name] = _get_sequence_code(vals)
                         # If no name, set name = sequence code
-                        if "name" in self._fields and "name" not in vals:
+                        if "name" in self._fields and not vals.get("name"):
                             vals["name"] = vals[code_field.name]
             else:
                 for rec in self:
                     if not getattr(rec, code_field.name):
                         setattr(rec, code_field.name, _get_sequence_code(rec))
+                        # If no name, set name = sequence code
+                        if "name" in self._fields and not rec.name:
+                            rec.name = getattr(rec, code_field.name)
         return vals_list

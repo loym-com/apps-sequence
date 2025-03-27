@@ -19,3 +19,9 @@ class IrModel(models.Model):
             "if the values are different and non-empty."
         ),
     )
+
+    def write(self, vals):
+        super().write(vals)
+        if "display_name_pattern" in vals:
+            # _get_display_name_pattern() reads directly from the database
+            self.env.cr.flush()

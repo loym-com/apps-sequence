@@ -1,0 +1,20 @@
+# Copyright 2025 Loym AS
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
+{
+    "name": "Sequence for projects and tasks",
+    "summary": "",
+    "author": "Loym AS",
+    "data": [
+        "views/project_project_views.xml",
+    ],
+    "depends": [
+        "display_name",
+        "project",
+        "sequence",
+    ],
+    "license": "AGPL-3",
+    "post_init_hook": "post_init_hook",
+    "version": "18.0.1.0.1",
+    "website": "https://www.loym.com",
+}
