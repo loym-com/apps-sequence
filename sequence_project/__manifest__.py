@@ -7,6 +7,7 @@
     "author": "Loym AS",
     "data": [
         "views/project_project_views.xml",
+        "views/project_task_views.xml",
     ],
     "depends": [
         "display_name",
