@@ -11,60 +11,40 @@ class Base(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         """Set sequence code for each record in vals_list."""
-        vals_list = self.sequence_code_set(vals_list)
+        vals_list = self.set_sequence_code(vals_list)
         return super().create(vals_list)
     
-    def sequence_code_get_model_info(self):
-        domain = [("model", "=", self._name)]
-        fields = ["sequence_code_field_id", "sequence_selection_field_id"]
-        info = self.env["ir.model"].sudo().search_read(domain=domain, fields=fields)[0]
-        return info
+        model = self.env["ir.model"].search([("model", "=", self._name)])
+        if "display_name_pattern" in model._fields:
+            return model.display_name_pattern or ""
+        else:
+            return ""
 
-    def sequence_code_set(self, vals_list=None):
-        """
-        # if code_field:
-        #   if vals_list:
-        #       create
-        #   else:
-        #       write
-        """
-        info = self.sequence_code_get_model_info()
-
-        def _get_sequence_code(rec_or_vals):
-            if info.get("sequence_selection_field_id"):
-                selection_field = self.env["ir.model.fields"].browse(info["sequence_selection_field_id"][0])
-                if type(rec_or_vals) == dict:
-                    value = rec_or_vals.get(selection_field.name)
-                elif type(rec_or_vals) == type(self):
-                    value = getattr(rec_or_vals, selection_field.name)
-                    if selection_field.ttype == "many2one":
-                        value = value.id
-                else:
-                    raise UserError(_("_get_sequence_code: Invalid type"))
-                sequence_code = _get_custom_sequence_code(selection_field, value)
-            else:
-                sequence_code = self.env["ir.sequence"].next_by_code(self._name)
-            return sequence_code
-
-        def _get_custom_sequence_code(selection_field, value):
-            value = str(value)
-            code = f"{selection_field.model}.{selection_field.name}.{value}"
-            return self.env["ir.sequence"].next_by_code(code)
-
-        if info.get("sequence_code_field_id"):
-            code_field = self.env["ir.model.fields"].browse(info["sequence_code_field_id"][0])
+    def set_sequence_code(self, vals_list=None):
+        model = self.env["ir.model"].search([("model", "=", self._name)])
+        if "sequence_code_field_id" in model._fields:
+          if model.sequence_code_field_id:
+            field = self.env["ir.model.fields"].browse(model.sequence_code_field_id.id)
             if vals_list:
+                # create
                 for vals in vals_list:
-                    if code_field.name not in vals:
-                        vals[code_field.name] = _get_sequence_code(vals)
-                        # If no name, set name = sequence code
+                    if field.name not in vals:
+                        # sequence code (sequence_choice needs vals)
+                        vals[field.name] = self._get_sequence_code(vals)
+                        # name (if empty)
                         if "name" in self._fields and not vals.get("name"):
-                            vals["name"] = vals[code_field.name]
+                            vals["name"] = vals[field.name]
             else:
+                # write
                 for rec in self:
-                    if not getattr(rec, code_field.name):
-                        setattr(rec, code_field.name, _get_sequence_code(rec))
-                        # If no name, set name = sequence code
+                    if not getattr(rec, field.name):
+                        # sequence code (sequence_choice needs vals)
+                        setattr(rec, field.name, rec._get_sequence_code())
+                        # name (if empty)
                         if "name" in self._fields and not rec.name:
-                            rec.name = getattr(rec, code_field.name)
+                            rec.name = getattr(rec, field.name)
         return vals_list
+
+    def _get_sequence_code(self, vals=None):
+        "vals is needed by sequence_choice to read values of a record to be created."
+        return self.env["ir.sequence"].next_by_code(self._name)

@@ -12,8 +12,23 @@ class Base(models.AbstractModel):
     def _get_display_name_re():
         return r"%\((\w+)\)s"
 
+    # _get_display_name_pattern is probably faster with standard ORM,
+    # but it fails when installing new modules.
+    
+    # def _get_display_name_pattern(self):
+    #     # FIXME
+    #     if self._context.get('install_mode'):
+    #         return ""
+    #     # Odoo AI says: first time: 2 database calls, second time: 0-1 database calls
+    #     model = self.env["ir.model"].search([("model", "=", self._name)])
+    #     if "display_name_pattern" in model._fields:
+    #         return model.display_name_pattern or ""
+    #     else:
+    #         return ""
+        
     def _get_display_name_pattern(self):
-        # Just one database call to get display_name_pattern if it exists
+        # Exactly one database call to get display_name_pattern if it exists
+        # TODO: Test if this gives petter performance.
 
         # Execute the query to fetch all columns for the current model
         self.env.cr.execute("""
@@ -35,6 +50,7 @@ class Base(models.AbstractModel):
 
         # Return the display_name_pattern if it exists, otherwise return ""
         return result_dict.get("display_name_pattern", "") or ""
+
 
     def _get_display_name_fields(self):
         fields = re.findall(

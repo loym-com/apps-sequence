@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "project_sequence_multi",
+    "name": "project_sequence_choice (deprecated, use sequence_project + sequence_choice)",
     "summary": "A project field will decide the sequence of the project",
     "author": "Loym AS",
     "website": "https://www.loym.com",

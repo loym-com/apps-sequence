@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    project_sequence_multi_field = fields.Many2one(
+    project_sequence_choice_field = fields.Many2one(
         string="Project Sequence Field",
         comodel_name="ir.model.fields",
         domain="""[
@@ -25,15 +25,15 @@ class ResConfigSettings(models.TransientModel):
         res = super(ResConfigSettings, self).get_values()
         field = self._get_project_sequence_field()
         if field:
-            res["project_sequence_multi_field"] = field.id
+            res["project_sequence_choice_field"] = field.id
         else:
-            res["project_sequence_multi_field"] = False
+            res["project_sequence_choice_field"] = False
         return res
     
     def _get_project_sequence_field(self):
         # model_name.field_name -> field.id
         field = False
-        model_field = self.env["ir.config_parameter"].sudo().get_param("project_sequence_multi_field", default=False)
+        model_field = self.env["ir.config_parameter"].sudo().get_param("project_sequence_choice_field", default=False)
         if model_field:
             model_name, field_name = model_field.rsplit(".", 1)
             field = self.env["ir.model.fields"].search(
@@ -48,18 +48,18 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         # field.id -> model_name.field_name
-        field = self.project_sequence_multi_field
+        field = self.project_sequence_choice_field
         if field:
             model_field = f"{field.model}.{field.name}"
         else:
             model_field = ""
         Parameter = self.env["ir.config_parameter"]
-        Parameter.sudo().set_param("project_sequence_multi_field", model_field)
+        Parameter.sudo().set_param("project_sequence_choice_field", model_field)
         self._create_project_sequences(model_field)
 
     def _create_project_sequences(self, model_field):
         Sequence = self.env["ir.sequence"]
-        field = self.project_sequence_multi_field
+        field = self.project_sequence_choice_field
         if field:
             if field.ttype == "boolean":
                 seq_field_values = ["yes", "no"]

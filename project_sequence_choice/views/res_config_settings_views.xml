@@ -7,18 +7,18 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//app[@name='project']" position="inside">
-                <block title="Project Sequence" name="project_sequence_multi">
+                <block title="Project Sequence" name="project_sequence_choice">
                     <setting
-                        id="project_sequence_multi_field"
+                        id="project_sequence_choice_field"
                         help="Selection/Boolean field to generate project sequences"
                     >
                         <field
-                            name="project_sequence_multi_field"
+                            name="project_sequence_choice_field"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
                         />
                         <div
                             class="content-group"
-                            invisible="not project_sequence_multi_field"
+                            invisible="not project_sequence_choice_field"
                         >
                             <div class="mt16">
                                 <button

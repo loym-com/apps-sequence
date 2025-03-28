@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Loym AS
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl-3.0) -->
+<data>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">Custom sequences</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='user_default_rights']" position="inside">
+                <setting id="use_custom_sequences">
+                    <field name="use_custom_sequences" />
+                    <div class="content-group" invisible="not use_custom_sequences">
+                        <div class="mt8">
+                            <button
+                                type="action"
+                                name="%(base.action_model_model)s"
+                                string="Manage Sequences on Models"
+                                icon="oi-arrow-right"
+                                class="btn-link"
+                            />
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</data>

@@ -5,12 +5,12 @@
         <field name="model">ir.model</field>
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
-            <field name="modules" position="after">
-                <field name="use_custom_sequences" invisible="1" />
+            <field name="sequence_code_field_id" position="after">
                 <field
-                    name="sequence_code_field_id"
+                    name="sequence_choice_field_id"
+                    groups="base.group_no_one"
+                    invisible="not sequence_code_field_id"
                     options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
-                    invisible="not use_custom_sequences"
                 />
             </field>
         </field>

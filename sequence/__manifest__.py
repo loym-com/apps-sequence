@@ -7,9 +7,14 @@
     "author": "Loym AS",
     "data": [
         "views/ir_model_views.xml",
+        "views/res_config_settings_views.xml",
     ],
-    "depends": ["base"],
+    "depends": [
+        "base_setup",
+        "display_name",
+    ],
     "license": "AGPL-3",
+    # "pre_init_hook": "pre_init_hook",
     "version": "18.0.1.0.1",
     "website": "https://www.loym.com",
 }

@@ -6,10 +6,11 @@
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
             <field name="modules" position="after">
+                <field name="use_custom_display_name" invisible="1" />
                 <field
                     name="display_name_pattern"
                     placeholder="%%(id)s - %%(name)s"
-                    groups="base.group_no_one"
+                    invisible="not use_custom_display_name"
                 />
             </field>
         </field>
