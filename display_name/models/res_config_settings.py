@@ -9,11 +9,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     use_custom_display_name = fields.Boolean(
-        string="Use Custom Display Name",
+        string="Custom Display Names",
         config_parameter="display_name.use_custom_display_name",
-        help=(
-            "Each record may have a sequence code. "
-            "Each model may have a custom display name, "
-            "e.g. '%(id)s - %(name)s'"
-        ),
+        help=("Choose how to see records in a list, e.g. '{id:05} - {name}'"),
     )

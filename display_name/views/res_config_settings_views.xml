@@ -8,14 +8,17 @@
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//block[@id='user_default_rights']" position="inside">
-                <setting id="use_custom_display_name">
+                <setting
+                    id="use_custom_display_name"
+                    help="Choose how to see records in a list, e.g. 'id - name'"
+                >
                     <field name="use_custom_display_name" />
                     <div class="content-group" invisible="not use_custom_display_name">
                         <div class="mt8">
                             <button
                                 type="action"
                                 name="%(base.action_model_model)s"
-                                string="Manage Display Name on Models"
+                                string="Set Display Name Pattern on Models"
                                 icon="oi-arrow-right"
                                 class="btn-link"
                             />
