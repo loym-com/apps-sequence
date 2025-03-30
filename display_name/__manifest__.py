@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Custom Display Name",
-    "summary": "Each model may have a custom display_name",
+    "name": "Display Names",
+    "summary": "Choose how to see records",
     "author": "Loym",
     "data": [
         "views/ir_model_views.xml",

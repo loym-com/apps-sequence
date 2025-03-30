@@ -1,7 +1,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -13,15 +12,9 @@ class Base(models.AbstractModel):
         """Set sequence code for each record in vals_list."""
         vals_list = self.set_sequence_code(vals_list)
         return super().create(vals_list)
-    
-        model = self.env["ir.model"].search([("model", "=", self._name)])
-        if "display_name_pattern" in model._fields:
-            return model.display_name_pattern or ""
-        else:
-            return ""
 
     def set_sequence_code(self, vals_list=None):
-        model = self.env["ir.model"].search([("model", "=", self._name)])
+        model = self.env["ir.model"].sudo().search([("model", "=", self._name)])
         if "sequence_code_field_id" in model._fields:
           if model.sequence_code_field_id:
             field = self.env["ir.model.fields"].browse(model.sequence_code_field_id.id)

@@ -1,3 +1,3 @@
 The development of this module has been financially supported by:
 
-- FIQ
+- FIQ as www.fiq.no

@@ -11,9 +11,5 @@ class ResConfigSettings(models.TransientModel):
     use_custom_sequences = fields.Boolean(
         string="Use Custom Sequences",
         config_parameter="sequence.use_custom_sequences",
-        help=(
-            "Each record may have a sequence code. "
-            "Each model may have a field to determine "
-            "how to generate the sequence code."
-        ),
+        help=("Each record may have a sequence code."),
     )
