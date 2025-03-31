@@ -13,7 +13,7 @@ class Base(models.AbstractModel):
 
     @api.model
     def _search_display_name(self, operator, value):
-        search_fnames = self._get_display_name_field_names()
+        search_fnames = self._get_display_name_field_paths()
         if not search_fnames:
             return super()._search_display_name(operator, value)
 
@@ -25,19 +25,24 @@ class Base(models.AbstractModel):
         aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
         return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
     
-    @api.depends(lambda self: self._get_display_name_field_names())
+    @api.depends(lambda self: self._get_display_name_field_paths())
     def _compute_display_name(self):
 
-        def fields_exist_and_are_filled_and_different(field_values):
-            # Check if there are any fields
-            if not field_values:
+        def get_nested_field_value(field_path):
+            fields = field_path.split('.')
+            value = record
+            try:
+                for field in fields:
+                    value = getattr(value, field)
+                return str(value)
+            except AttributeError:
+                return None
+
+        def values_are_non_empty_and_different(values):
+            non_empty = [value for value in values.values() if bool(value)]
+            if len(non_empty) != len(values):
                 return False
-            # Check if all fields have a non-empty value
-            if not all(field_values.values()):
-                return False
-            # Check if all values are different
-            values = list(field_values.values())
-            if len(values) != len(set(values)):
+            if len(set(non_empty)) != len(non_empty):
                 return False
             return True
         
@@ -51,15 +56,18 @@ class Base(models.AbstractModel):
         if not pattern:
             return res
 
-        field_names = model._get_display_name_field_names()
-        for record in self:
-            field_values = {
-                field_name: getattr(record, field_name, "")
-                for field_name in field_names
-            }
-            if fields_exist_and_are_filled_and_different(field_values):
-                record.display_name = pattern.format(**field_values)
+        field_paths = model._get_display_name_field_paths()
+        if not field_paths:
+            return res
 
-    def _get_display_name_field_names(self):
+        for record in self:
+            values = {
+                field_path: get_nested_field_value(field_path)
+                for field_path in field_paths
+            }
+            if values_are_non_empty_and_different(values):
+                record.display_name = pattern.format(**values)
+
+    def _get_display_name_field_paths(self):
         Model = self.env["ir.model"]
-        return Model.search([("name", "=", self._name)])._get_display_name_field_names()
+        return Model.search([("name", "=", self._name)])._get_display_name_field_paths()

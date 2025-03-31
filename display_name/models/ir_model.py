@@ -22,7 +22,7 @@ class IrModel(models.Model):
     display_name_pattern = fields.Char(
         string="Display Name",
         help=(
-            "Example: '{id:05} - {name}'\n"
+            "Example: '{id:>05} - {name}'\n"
             "Use python string format syntax.\n\n"
             "Conditions for displaying a record like the pattern:\n"
             "1. The field values are different and non-empty.\n"
@@ -31,21 +31,39 @@ class IrModel(models.Model):
     )
 
     @api.constrains("display_name_pattern")
-    def _check_display_name_field_names(self):
-        for model in self:
-            field_names = model._get_display_name_field_names()
-            fields = self.env["ir.model.fields"].search(
-                [("model", "=", self.model), ("name", "in", field_names)]
-            )
-            if not len(field_names) == len(fields):
-                msg = f"_check_display_name_field_names: not all exist: {field_names!s}"
-                raise ValidationError(msg)
+    def _check_display_name_field_paths(self):
+        def valid(field_path):
+            try:
+                fields = field_path.split('.')
+                current_model = self.env[model.model]
+                for field in fields:
+                    has_id = hasattr(current_model, 'id')
+                    fields = current_model._fields
+                    field_def = current_model._fields.get(field)
+                    if not field_def:
+                        return False
+                    if field_def.type in ('many2one', 'one2many', 'many2many'):
+                        current_model = self.env[field_def.comodel_name]
+                    else:
+                        pass
+                return True
+            except Exception:
+                return False
 
-    def _get_display_name_field_names(self):
+        for model in self:
+            field_paths = model._get_display_name_field_paths()
+            for field_path in field_paths:
+                if not valid(field_path):
+                    raise ValidationError(
+                        f"_check_display_name_field_paths: "
+                        f"field_path {field_path} is not valid."
+                    )
+
+    def _get_display_name_field_paths(self):
         regexp = r"\{(\w+)(?:[:!][^}]*)?\}"
         pattern = self._get_display_name_pattern()
-        field_names = [match.group(1) for match in re.finditer(regexp, pattern)]
-        return tuple(field_names)
+        field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
+        return tuple(field_paths)
 
     def _get_display_name_pattern(self):
         if not self:

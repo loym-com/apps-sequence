@@ -76,7 +76,7 @@ class TestSequence(TransactionCase):
         record.set_sequence_code()
         self.assertEqual(record.iso_code, "lang-00001")
 
-    def test_no_name_get_sequence_code(self):
+    def test_no_name_get_next_sequence_code(self):
         model = self.env.ref("base.model_res_partner")
         model.sequence_code_field_id = self._get_field(model.id, "ref").id
         record = self.env[model.model].create({"type": "other"})

@@ -9,7 +9,7 @@
                 <field name="use_custom_display_name" invisible="1" />
                 <field
                     name="display_name_pattern"
-                    placeholder="{id:05} - {name}"
+                    placeholder="{id:>05} - {name}"
                     invisible="not use_custom_display_name"
                 />
             </field>

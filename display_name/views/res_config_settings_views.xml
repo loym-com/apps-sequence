@@ -10,7 +10,7 @@
             <xpath expr="//block[@id='user_default_rights']" position="inside">
                 <setting
                     id="use_custom_display_name"
-                    help="Choose how to see records in a list, e.g. '{id:05} - {name}'"
+                    help="Choose how to see records in a list, e.g. '{id:>05} - {name}'"
                 >
                     <field name="use_custom_display_name" />
                     <div class="content-group" invisible="not use_custom_display_name">

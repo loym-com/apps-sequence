@@ -11,5 +11,5 @@ class ResConfigSettings(models.TransientModel):
     use_custom_display_name = fields.Boolean(
         string="Custom Display Names",
         config_parameter="display_name.use_custom_display_name",
-        help=("Choose how to see records in a list, e.g. '{id:05} - {name}'"),
+        help=("Choose how to see records in a list, e.g. '{id:>05} - {name}'"),
     )
