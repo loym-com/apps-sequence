@@ -7,7 +7,7 @@ def post_init_hook(env):
     project_model.display_name_pattern = "{sequence_code} - {name}"
     task_model.display_name_pattern ="[{sequence_code}] {name}"
 
-    project_model.set_sequence_then_field(
+    project_model.set_sequence(
         field_name="sequence_code",
         sequence_values={
             "prefix": "%(y)s-",
@@ -16,7 +16,7 @@ def post_init_hook(env):
             "company_id": False,
         }
     )
-    task_model.set_sequence_then_field(
+    task_model.set_sequence(
         field_name="sequence_code",
         sequence_values={
             "prefix": "T",

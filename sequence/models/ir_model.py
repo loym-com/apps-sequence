@@ -32,7 +32,7 @@ class IrModel(models.Model):
     )
 
     # Use in res.config.settings and/or post_init_hook.
-    def set_sequence_then_field(self, field_name=None, sequence_values={}):
+    def set_sequence(self, field_name=None, sequence_values={}):
         self.ensure_one()
         # Set the sequence first, to apply custom values.
         self._create_missing_sequence(code=self.model, values=sequence_values)
