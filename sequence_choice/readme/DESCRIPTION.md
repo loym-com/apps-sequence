@@ -1,3 +1,4 @@
-With this module, each record may have a sequence code.
+With this module, records of a model may have different sequence code numbering,
+depending of the value of a field that will choose the sequence.
 
-A new record without a name will get the sequence code as the name.
+Depends on `sequence`.

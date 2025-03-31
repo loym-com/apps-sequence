@@ -18,7 +18,7 @@ class IrModel(models.Model):
 
     use_custom_sequences = fields.Boolean(compute="_use_custom_sequences")
     sequence_code_field_id = fields.Many2one(
-        string="Store sequence in",
+        string="Sequence Code Field",
         comodel_name="ir.model.fields",
         domain="[('id', 'in', field_id), ('ttype', 'in', ['char', 'text'])]",
         help="Select a field to store a sequence_code.\n"
@@ -32,10 +32,10 @@ class IrModel(models.Model):
     )
 
     # Use in res.config.settings and/or post_init_hook.
-    def set_sequence_and_field(self, field_name=None, sequence_vals={}):
+    def set_sequence_then_field(self, field_name=None, sequence_values={}):
         self.ensure_one()
-        # Set the sequence first, to get custom values.
-        self._set_sequence(code=self.model, vals=sequence_vals)
+        # Set the sequence first, to apply custom values.
+        self._create_missing_sequence(code=self.model, values=sequence_values)
         # Set the field.
         field = self.env["ir.model.fields"].search(
             [("model_id", "=", self.id), ("name", "=", field_name)]
@@ -43,19 +43,19 @@ class IrModel(models.Model):
         self.sequence_code_field_id = field.id
 
     @api.constrains("sequence_code_field_id")
-    def set_sequence_code_field_id(self):
+    def check_sequence_code_field_id(self):
         self.ensure_one()
         field = self.sequence_code_field_id
         if field:
             if field.ttype not in ("char", "text"):
-                func_name = "set_sequence_code_field_id"
+                func_name = "check_sequence_code_field_id"
                 raise ValidationError(
                     f"{func_name}: field {field.name} type should be char or text."
                 )
-            self._set_sequence(code=self.model)
-            self._set_sequence_code_action()
+            self._create_missing_sequence(code=self.model)
+            self._create_missing_sequence_code_action()
 
-    def _set_sequence(self, code, vals={}):
+    def _create_missing_sequence(self, code, values={}):
         Sequence = self.env["ir.sequence"]
         sequence = Sequence.search([("code", "=", code)])
         if not sequence:
@@ -69,11 +69,11 @@ class IrModel(models.Model):
                     "code": code,
                     "padding": 5,
                     "prefix": prefix + "-",
-                } | vals
+                } | values
             )
             _logger.info(f"Created sequence {sequence.name}")
 
-    def _set_sequence_code_action(self):
+    def _create_missing_sequence_code_action(self):
         if self.sequence_code_field_id:
             search_domain = [
                 ("model_id", "=", self.id),

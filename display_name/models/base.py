@@ -34,7 +34,7 @@ class Base(models.AbstractModel):
             try:
                 for field in fields:
                     value = getattr(value, field)
-                return str(value)
+                return value
             except AttributeError:
                 return None
 
@@ -70,4 +70,4 @@ class Base(models.AbstractModel):
 
     def _get_display_name_field_paths(self):
         Model = self.env["ir.model"]
-        return Model.search([("name", "=", self._name)])._get_display_name_field_paths()
+        return Model.search([("model", "=", self._name)])._get_display_name_field_paths()

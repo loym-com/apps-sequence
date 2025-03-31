@@ -14,7 +14,7 @@ class ProjectProject(models.Model):
         if seq_field:
             for vals in vals_list:
                 seq_field_value = vals.get(seq_field.name)
-                sequence_code = self._get_sequence_code(seq_field, seq_field_value)
+                sequence_code = self._get_next_sequence_code(seq_field, seq_field_value)
                 vals["sequence_code"] = sequence_code
         res = super().create(vals_list)
         res._sync_analytic_account_name()
@@ -25,12 +25,12 @@ class ProjectProject(models.Model):
         for project in self:
             if seq_field:
                 seq_field_value = getattr(project, seq_field.name)
-                sequence_code = self._get_sequence_code(seq_field, seq_field_value)
+                sequence_code = self._get_next_sequence_code(seq_field, seq_field_value)
             else:
                 sequence_code = self.env["ir.sequence"].next_by_code("project.sequence")
             project.sequence_code = sequence_code
 
-    def _get_sequence_code(self, seq_field, seq_field_value):
+    def _get_next_sequence_code(self, seq_field, seq_field_value):
         if seq_field_value == True:
             seq_field_value = "yes"
         elif seq_field_value == False:

@@ -1,22 +1,24 @@
 from odoo import api, SUPERUSER_ID
 
 def post_init_hook(env):
-    Project = env["ir.model"].search([("model", "=", "project.project")])
-    Task = env["ir.model"].search([("model", "=", "project.task")])
+    project_model = env["ir.model"].sudo().search([("model", "=", "project.project")])
+    task_model = env["ir.model"].sudo().search([("model", "=", "project.task")])
 
-    Project.set_display_name_pattern("%(sequence_code)s - %(name)s")
-    Task.set_display_name_pattern("[%(sequence_code)s] %(name)s")
+    project_model.display_name_pattern = "{sequence_code} - {name}"
+    task_model.display_name_pattern ="[{sequence_code}] {name}"
 
-    Project.set_sequence_and_action(
-        {
+    project_model.set_sequence_then_field(
+        field_name="sequence_code",
+        sequence_values={
             "prefix": "%(y)s-",
             "use_date_range": True,
             "padding": 5,
             "company_id": False,
         }
     )
-    Task.set_sequence_and_action(
-        {
+    task_model.set_sequence_then_field(
+        field_name="sequence_code",
+        sequence_values={
             "prefix": "T",
             "padding": 4,
             "company_id": False,

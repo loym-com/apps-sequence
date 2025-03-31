@@ -10,7 +10,6 @@
     ],
     "depends": ["sequence"],
     "license": "AGPL-3",
-    # "pre_init_hook": "pre_init_hook",
     "version": "18.0.1.0.1",
     "website": "https://www.loym.com",
 }

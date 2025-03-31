@@ -1,1 +1,1 @@
-- Henrik Norlin <henrik@loym.com>
+- [Henrik Norlin](https://www.loym.com/)

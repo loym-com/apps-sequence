@@ -46,5 +46,4 @@ class IrModel(models.Model):
 
             for value in values:
                 code = f"{self.model}.{field.name}.{value}"
-                self._set_sequence(code)
-        return self.set_sequence_and_action()
+                self._create_missing_sequence(code)

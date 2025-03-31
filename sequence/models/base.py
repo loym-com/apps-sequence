@@ -14,7 +14,7 @@ class Base(models.AbstractModel):
         return super().create(vals_list)
     
     def write(self, vals):
-        """If no name, then name = sequence code"""
+        """Set name = sequence code if removing name or no existing name"""
         if vals.get("name") or "name" not in self._fields:
             return super().write(vals)
 
@@ -24,11 +24,14 @@ class Base(models.AbstractModel):
             return super().write(vals)
 
         for record in self:
-            if not record.name:
-                if field.name in vals:
-                    vals["name"] = vals[field.name]
+            removing_name = bool("name" in vals and not vals.get("name"))
+            existing_name = getattr(record, "name", False)
+            if removing_name or not existing_name:
+                sequence_code_field_name = field.name
+                if sequence_code_field_name in vals:
+                    vals["name"] = vals[sequence_code_field_name]
                 else:
-                    vals["name"] = getattr(record, field.name)
+                    vals["name"] = getattr(record, sequence_code_field_name)
             super().write(vals)
         return True
 
@@ -36,7 +39,8 @@ class Base(models.AbstractModel):
         model = self.env["ir.model"].sudo().search([("model", "=", self._name)])
         # if "sequence_code_field_id" in model._fields and model.sequence_code_field_id:
         if model.sequence_code_field_id:
-            field = self.env["ir.model.fields"].browse(model.sequence_code_field_id.id)
+            FieldSudo = self.env["ir.model.fields"].sudo()
+            field = FieldSudo.browse(model.sequence_code_field_id.id)
             if vals_list:
                 # create
                 for vals in vals_list:
