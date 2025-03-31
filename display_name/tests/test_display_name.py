@@ -23,3 +23,5 @@ class TestDisplayName(TransactionCase):
         self.group_model.display_name_pattern = "{id:>05} - {name}"
         self.group._invalidate_cache(["display_name"])
         self.assertEqual(self.group.display_name, f"{self.group.id:>05} - Test Group")
+
+    # TODO: write a test for "{related_id.id}/{id} - {name}"

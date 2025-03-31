@@ -28,23 +28,18 @@ class Base(models.AbstractModel):
     @api.depends(lambda self: self._get_display_name_field_paths())
     def _compute_display_name(self):
 
-        def get_nested_field_value(field_path):
-            fields = field_path.split('.')
+        def get_nested_value(record, field_path):
+            """
+            Retrieve a nested value from the record using dot notation.
+            """
+            fields = field_path.split(".")
             value = record
-            try:
-                for field in fields:
+            for field in fields:
+                if value and hasattr(value, field):
                     value = getattr(value, field)
-                return value
-            except AttributeError:
-                return None
-
-        def values_are_non_empty_and_different(values):
-            non_empty = [value for value in values.values() if bool(value)]
-            if len(non_empty) != len(values):
-                return False
-            if len(set(non_empty)) != len(non_empty):
-                return False
-            return True
+                else:
+                    return None
+            return value
         
         res = super()._compute_display_name()
 
@@ -61,13 +56,34 @@ class Base(models.AbstractModel):
             return res
 
         for record in self:
-            values = {
-                field_path: get_nested_field_value(field_path)
-                for field_path in field_paths
-            }
-            if values_are_non_empty_and_different(values):
-                record.display_name = pattern.format(**values)
+            # Collect values for the field paths
+            vals = {}
+            for field_path in field_paths:
+                value = get_nested_value(record, field_path)
+                if value is not None:
+                    vals[field_path] = value
+
+            # Check if all fields have values
+            if len(vals) == len(field_paths):
+                # Extract the "name" field (if present)
+                name_field = next(
+                    (key for key in vals if key.endswith(".name") or key == "name"), 0
+                )
+
+                # Check if "name" is different from the other values
+                if name_field:
+                    other_values = {
+                        key: value for key, value in vals.items() if key != name_field
+                    }
+                    if vals[name_field] not in other_values.values():
+                            # Replace placeholders in the pattern with the actual values
+                            record.display_name = re.sub(
+                                r"\{([\w.]+)\}",
+                                lambda match: str(vals[match.group(1)]),
+                                pattern,
+                            )
+        return True
 
     def _get_display_name_field_paths(self):
-        Model = self.env["ir.model"]
-        return Model.search([("model", "=", self._name)])._get_display_name_field_paths()
+        M = self.env["ir.model"]
+        return M.search([("model", "=", self._name)])._get_display_name_field_paths()
