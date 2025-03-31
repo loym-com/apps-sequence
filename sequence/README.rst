@@ -28,7 +28,9 @@ Sequences
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-With this module, each record may have a sequence code.
+All records get an id. But you may want to number records differently.
+Odoo sequences provide flexible numbering. With this module, you can
+number records with a sequence per model.
 
 A record without a name will get the sequence code as the name.
 

@@ -28,11 +28,13 @@ sequence_choice
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-With this module, records of a model may have different sequence code
-numbering, depending of the value of a field that will choose the
-sequence.
-
-Depends on ``sequence``.
+This module depends on ``sequence`` which numbers records with a
+sequence per model. But you may want to have multiple sequences for the
+same model. E.g. you want separate numbering for companies and people.
+The contact model has a 'company_type' field which can be 'person' or
+'company'. With this module, you can configure that the sequence code
+for a contact will consider the 'company_type', or another 'selection'
+or 'boolean' field. There will be a sequence for each option.
 
 **Table of contents**
 
@@ -73,8 +75,9 @@ The default sequence (code=model.name) is used when:
 - There is a 'selection' field to choose a sequence, and the record has
   empty value.
 
-If the default sequence is deleted, it will be created again if the
-model field to *store sequence in* is updated.
+If the default sequence is deleted, and the model field to *store
+sequence in* is updated, then the default sequence will be created
+again.
 
 Usage
 =====

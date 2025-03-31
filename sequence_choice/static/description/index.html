@@ -370,10 +370,13 @@ ul.auto-toc {
 !! source digest: sha256:5d5e4511d7bd0adc9bd29c148489307ac8b753a7694b60a4a5ec3b43ad2854ef
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/mis-builder/tree/18.0/sequence_choice"><img alt="OCA/mis-builder" src="https://img.shields.io/badge/github-OCA%2Fmis--builder-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/mis-builder-18-0/mis-builder-18-0-sequence_choice"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/mis-builder&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
-<p>With this module, records of a model may have different sequence code
-numbering, depending of the value of a field that will choose the
-sequence.</p>
-<p>Depends on <tt class="docutils literal">sequence</tt>.</p>
+<p>This module depends on <tt class="docutils literal">sequence</tt> which numbers records with a
+sequence per model. But you may want to have multiple sequences for the
+same model. E.g. you want separate numbering for companies and people.
+The contact model has a ‘company_type’ field which can be ‘person’ or
+‘company’. With this module, you can configure that the sequence code
+for a contact will consider the ‘company_type’, or another ‘selection’
+or ‘boolean’ field. There will be a sequence for each option.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -422,8 +425,9 @@ more info. Make a new field if necessary. The type should be
 <li>There is a ‘selection’ field to choose a sequence, and the record has
 empty value.</li>
 </ul>
-<p>If the default sequence is deleted, it will be created again if the
-model field to <em>store sequence in</em> is updated.</p>
+<p>If the default sequence is deleted, and the model field to <em>store
+sequence in</em> is updated, then the default sequence will be created
+again.</p>
 </div>
 <div class="section" id="usage">
 <h1><a class="toc-backref" href="#toc-entry-2">Usage</a></h1>
