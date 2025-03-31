@@ -1,4 +1,3 @@
-=========
 Sequences
 =========
 
@@ -27,39 +26,39 @@ It shows how one may implement a sequence for a model:
 To combine these use cases,
 settings should be stored in `ir.model` (instead of `ìr.config_parameter`).
 
-Sequences are already implemented in ca 30 OCA modules on a supported version (16-18):
+Sequences seem to be implemented in many OCA modules on a supported version (16-18):
 
-* account_analytic_sequence
-* account_journal_general_sequence
-* account_move_name_sequence
-* account_sequence_option
-* base_partner_sequence
-* base_sequence_default
-* base_sequence_option
-* hr_expense_advance_clearing_sequence
-* hr_expense_sequence
-* hr_expense_sequence_option
-* l10n_th_base_sequence
-* maintenance_equipment_sequence
-* maintenance_request_sequence
-* mrp_workorder_sequence
-* product_default_code_res_company_code
-* product_internal_reference_generator
-* product_lot_sequence
-* product_sequence
-* project_task_code
-* purchase_order_line_sequence
-* repair_type_sequence
-* sale_order_line_sequence
-* sale_quotation_number
-* sale_stock_line_sequence
-* sequence_check_digit
-* sequence_python
-* sequence_reset_period
-* stock_picking_line_sequence
+1. account_analytic_sequence
+2. account_journal_general_sequence
+3. account_move_name_sequence
+4. account_sequence_option
+5. base_partner_sequence
+6. base_sequence_default
+7. base_sequence_option
+8. hr_expense_advance_clearing_sequence
+9. hr_expense_sequence
+10. hr_expense_sequence_option
+11. l10n_th_base_sequence
+12. maintenance_equipment_sequence
+13. maintenance_request_sequence
+14. mrp_workorder_sequence
+15. product_default_code_res_company_code
+16. product_internal_reference_generator
+17. product_lot_sequence
+18. product_sequence
+19. project_task_code
+20. purchase_order_line_sequence
+21. repair_type_sequence
+22. sale_order_line_sequence
+23. sale_quotation_number
+24. sale_stock_line_sequence
+25. sequence_check_digit
+26. sequence_python
+27. sequence_reset_period
+28. stock_picking_line_sequence
 
 I want `sequence` and `display_name` to be generic
-so they can be useful and easy to implement for various sequences.
+so that they can be useful and easy to implement for various sequences.
 [Here I have opened an issue to discuss these things](https://github.com/OCA/server-ux/issues/1058),
 before I make pull requests to the OCA.
 
