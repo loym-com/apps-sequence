@@ -24,6 +24,4 @@
 
 `sequence_project`
 
-[Loym](https://www.loym.com/)
-
-- Henrik Norlin 
+- [Henrik Norlin](https://www.loym.com/)
