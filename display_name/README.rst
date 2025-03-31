@@ -34,6 +34,9 @@ you may want to identify a record by other fields. With this module, you
 can customize the display of records, per model. And you can search on
 the fields that are used in the display name.
 
+Example for tasks: "P{project_id.id:>03}/T{id:>04} - {name}" --->
+"P001/T0001 - My Task"
+
 **Table of contents**
 
 .. contents::
@@ -81,6 +84,11 @@ Authors
 Contributors
 ------------
 
+- Contributors of
+  `project_sequence <https://github.com/OCA/project/tree/18.0/project_sequence>`__
+  and
+  `project_task <https://github.com/OCA/project/tree/16.0/project_task_code>`__
+  (`18.0 MIG <https://github.com/OCA/project/pull/1409>`__)
 - `Henrik Norlin <https://www.loym.com/>`__
 
 Other credits
