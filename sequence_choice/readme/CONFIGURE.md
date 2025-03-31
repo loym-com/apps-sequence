@@ -24,5 +24,6 @@ The default sequence (code=model.name) is used when:
 * The model has no field to choose a sequence.
 * There is a 'selection' field to choose a sequence, and the record has empty value.
 
-If the default sequence is deleted, it will be created again
-if the model field to *store sequence in* is updated.
+If the default sequence is deleted,
+and the model field to *store sequence in* is updated,
+then the default sequence will be created again.
