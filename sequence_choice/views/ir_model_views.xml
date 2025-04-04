@@ -8,7 +8,6 @@
             <field name="sequence_code_field_id" position="after">
                 <field
                     name="sequence_choice_field_id"
-                    groups="base.group_no_one"
                     invisible="not sequence_code_field_id"
                     options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
                 />

@@ -60,7 +60,7 @@ class IrModel(models.Model):
                     )
 
     def _get_display_name_field_paths(self):
-        regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"# dot notation
+        regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
         pattern = self._get_display_name_pattern()
         field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
         return tuple(field_paths)
