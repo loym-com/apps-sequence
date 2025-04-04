@@ -24,4 +24,14 @@ class TestDisplayName(TransactionCase):
         self.group._invalidate_cache(["display_name"])
         self.assertEqual(self.group.display_name, f"{self.group.id:>05} - Test Group")
 
-    # TODO: write a test for "{related_id.id}/{id} - {name}"
+        # Pattern with dotted field, number format and date format
+        pattern = "{create_uid.id:>03}/{create_date:%Y-%m-%d} - {name}"
+        self.group_model.display_name_pattern = pattern
+        self.group._invalidate_cache(["display_name"])
+        self.assertEqual(
+            self.group.display_name, pattern.format(
+                create_uid=self.group.create_uid,
+                create_date=self.group.create_date,
+                name=self.group.name,
+            )
+        )
