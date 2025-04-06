@@ -9,19 +9,6 @@ from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
-def get_nested_value_and_field_type(record, field_path):
-    # field_path may use dot notation, e.g. related_id.field"
-    fields = field_path.split(".")
-    value = record
-    for field in fields:
-        if field in value._fields:
-            field_type = value._fields.get(field).type
-            value = getattr(value, field)
-        else:
-            return (None, None)
-    return (value, field_type)
-
-
 class Base(models.AbstractModel):
     _inherit = "base"
 
@@ -78,13 +65,15 @@ class Base(models.AbstractModel):
         indexed_pattern = get_indexed_pattern(pattern, field_paths)
 
         for record in self:
-            false_value = False
-            name_not_unique = False
-            # Collect values for the field paths, and check for false values
+            # Skip if value exists in stored field
+            if record._fields[field_name].store and getattr(record, field_name):
+                continue
+            # Collect values, and check for false values
             vals = {}
             name_vals = {}
+            false_value = False
             for i, field_path in enumerate(field_paths):
-                value, value_type = get_nested_value_and_field_type(record, field_path)
+                value, value_type = record._get_display_value_and_type(field_path)
                 if not value and value_type != "boolean":
                     false_value = True
                     break
@@ -92,6 +81,7 @@ class Base(models.AbstractModel):
                 if field_path.endswith(".name") or field_path == "name":
                     name_vals[i] = value
             # Check if "name" values are unique
+            name_not_unique = False
             for i, value in name_vals.items():
                 if value in {v for k, v in vals.items() if k != i}:
                     name_not_unique = True
@@ -100,8 +90,7 @@ class Base(models.AbstractModel):
             if false_value or name_not_unique:
                 continue
             # Set the display field value
-            values = vals.values()
-            setattr(record, field_name, indexed_pattern.format(*values))
+            setattr(record, field_name, indexed_pattern.format(*vals.values()))
         return res
 
     def _get_display_field_paths(self, pattern_path):
@@ -118,7 +107,7 @@ class Base(models.AbstractModel):
             return ""
 
         pattern = ""
-        self_pattern = get_nested_value_and_field_type(self, pattern_path)
+        self_pattern = self._get_display_value_and_type(pattern_path)
         if self_pattern and self_pattern[0]:
             pattern = self_pattern[0] or ""
         else:
@@ -127,7 +116,19 @@ class Base(models.AbstractModel):
             # - Order by a field which always exists.
             IrModel = self.env["ir.model"].sudo().with_context(prefetch_fields=False)
             model = IrModel.search([("model", "=", self._name)], order="id")
-            model_pattern = get_nested_value_and_field_type(model, pattern_path)
+            model_pattern = model._get_display_value_and_type(pattern_path)
             if model_pattern and model_pattern[0]:
                 pattern = model_pattern[0] or ""
         return pattern
+
+    def _get_display_value_and_type(self, field_path):
+        # field_path may use dot notation, e.g. related_id.field"
+        fields = field_path.split(".")
+        value = self
+        for field in fields:
+            if field in value._fields:
+                field_type = value._fields.get(field).type
+                value = getattr(value, field)
+            else:
+                return (None, None)
+        return (value, field_type)

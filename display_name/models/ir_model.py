@@ -79,3 +79,11 @@ class IrModel(models.Model):
                         f"_check_display_name_field_paths: "
                         f"field_path {field_path} is not valid."
                     )
+
+    # @api.constrains("display_code_field_id", "display_code_pattern")
+    # def _update_display_code(self):
+    #     for m in self:
+    #         if m.get("display_code_field_id") and m.get("display_name_pattern"):
+    #             display_code_field_name = getattr(m, "display_code_field_id").name
+    #             records = self.env[m.model].with_context(active_test=False).search([])
+    #             records.recompute([display_code_field_name])
