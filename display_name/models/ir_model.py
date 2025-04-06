@@ -22,24 +22,45 @@ class IrModel(models.Model):
     display_name_pattern = fields.Char(
         string="Display Name",
         help=(
-            "Example: '{id:>05} - {name}'\n"
+            "Example: '{parent_id.display_code}/{display_code} - {name}'\n"
             "Use python string format syntax.\n\n"
             "Conditions for displaying a record like the pattern:\n"
-            "1. The field values are different and non-empty.\n"
-            "2. No other module will _compute_display_name()."
+            "1. The field values are non-false (boolean field may be False)."
+            "2. The name has a different value than the other fields.\n"
+            "3. No other module will _compute_display_name()."
+        ),
+    )
+    display_code_field_id = fields.Many2one(
+        string="Display Code Field",
+        comodel_name="ir.model.fields",
+        domain="[('id', 'in', field_id), ('ttype', 'in', ['char', 'text'])]",
+        help="Select a field to store a display code.",
+    )
+    display_code_pattern = fields.Char(
+        string="Display Code",
+        help=(
+            "Example: 'Y{create_date:%y}-{id:>03}'\n"
+            "Use python string format syntax."
         ),
     )
 
     @api.constrains("display_name_pattern")
     def _check_display_name_field_paths(self):
+        return self._check_display_field_paths("display_name_pattern")
+    
+    @api.constrains("display_code_pattern")
+    def _check_display_code_field_paths(self):
+        return self._check_display_field_paths("display_code_pattern")
+    
+    def _check_display_field_paths(self, field_name):
         def valid(field_path):
             try:
-                fields = field_path.split('.')
+                field_names = field_path.split('.')
                 current_model = self.env[model.model]
-                for field in fields:
+                for field_name in field_names:
                     has_id = hasattr(current_model, 'id')
                     fields = current_model._fields
-                    field_def = current_model._fields.get(field)
+                    field_def = current_model._fields.get(field_name)
                     if not field_def:
                         return False
                     if field_def.type in ('many2one', 'one2many', 'many2many'):
@@ -51,26 +72,10 @@ class IrModel(models.Model):
                 return False
 
         for model in self:
-            field_paths = model._get_display_name_field_paths()
+            field_paths = model._get_display_field_paths(field_name)
             for field_path in field_paths:
                 if not valid(field_path):
                     raise ValidationError(
                         f"_check_display_name_field_paths: "
                         f"field_path {field_path} is not valid."
                     )
-
-    def _get_display_name_field_paths(self):
-        regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
-        pattern = self._get_display_name_pattern()
-        field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
-        return tuple(field_paths)
-
-    def _get_display_name_pattern(self):
-        if not self:
-            return ""
-        if "display_name_pattern" in self._fields:
-            self.ensure_one()
-            # Do not prefetch fields (to install apps without errors).
-            return self.with_context(prefetch_fields=False).display_name_pattern or ""
-        else:
-            return ""
