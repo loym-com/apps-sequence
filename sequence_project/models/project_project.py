@@ -4,13 +4,13 @@ from odoo import api, fields, models
 class ProjectProject(models.Model):
     _name = "project.project"
     _inherit = ["project.project", "sequence.mixin"]
-    _sql_constraints = [
-        (
-            "unique_sequence_code",
-            "UNIQUE(sequence_code)",
-            "Sequence code must be unique!",
-        ),
-    ]
+    # _sql_constraints = [
+    #     (
+    #         "unique_sequence_code",
+    #         "UNIQUE(sequence_code)",
+    #         "Sequence code must be unique!",
+    #     ),
+    # ]
 
     name = fields.Char(
         # We actually require it with the SQL constraint, but it is disabled
