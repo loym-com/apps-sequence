@@ -30,12 +30,6 @@ class IrModel(models.Model):
             "3. No other module will _compute_display_name()."
         ),
     )
-    display_code_field_id = fields.Many2one(
-        string="Display Code Field",
-        comodel_name="ir.model.fields",
-        domain="[('id', 'in', field_id), ('ttype', 'in', ['char', 'text'])]",
-        help="Select a field to store a display code.",
-    )
     display_code_pattern = fields.Char(
         string="Display Code",
         help=(
@@ -80,10 +74,10 @@ class IrModel(models.Model):
                         f"field_path {field_path} is not valid."
                     )
 
-    # @api.constrains("display_code_field_id", "display_code_pattern")
-    # def _update_display_code(self):
-    #     for m in self:
-    #         if m.get("display_code_field_id") and m.get("display_name_pattern"):
-    #             display_code_field_name = getattr(m, "display_code_field_id").name
-    #             records = self.env[m.model].with_context(active_test=False).search([])
-    #             records.recompute([display_code_field_name])
+    def set_missing_stored_display_code(self):
+        self.ensure_one()
+        Model = self.env[self.model].with_context(active_test=False)
+        field = Model._fields["display_code"]
+        if field.store and self.display_code_pattern:
+            records = Model.search([("display_code", "=", False)])
+            records._compute_display_code()

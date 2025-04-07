@@ -35,16 +35,3 @@ class TestDisplayName(TransactionCase):
                 name=self.group.name,
             )
         )
-
-    # def test_2_display_code_with_stored_field(self):
-    #     self.group_model.display_code_field_id = self.group_model.field_id.filtered(
-    #         lambda f: f.name == "comment"
-    #     )
-    #     self.group_model.display_code_pattern = "{name}"
-    #     self.assertEqual(self.group.comment, False)
-    #     self.group.name = "Name"
-    #     self.group._invalidate_cache(["comment"])
-    #     self.assertEqual(self.group.comment, "Name")
-    #     self.group.name = "NEW NAME"
-    #     self.group._invalidate_cache(["comment"])
-    #     self.assertEqual(self.group.comment, "Name")

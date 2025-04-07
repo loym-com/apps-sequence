@@ -2,7 +2,7 @@ import logging
 import psycopg2
 import re
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools.translate import _
 
@@ -11,6 +11,8 @@ _logger = logging.getLogger(__name__)
 
 class Base(models.AbstractModel):
     _inherit = "base"
+
+    # display_name
 
     @api.model
     def _search_display_name(self, operator, value):
@@ -31,12 +33,25 @@ class Base(models.AbstractModel):
         res = super()._compute_display_name()
         return self._compute_display_field("display_name", "display_name_pattern", res)
     
+    # display_code
+
+    display_code = fields.Char(
+        compute="_compute_display_code",
+        inverse="_inverse_display_code",
+        store=False, # in base; set True for a specific model in a custom module
+        copy=False,
+    )
+
     @api.depends(lambda self: self._get_display_field_paths("display_code_pattern"))
     def _compute_display_code(self):
-        IrModel = self.env["ir.model"].sudo().with_context(prefetch_fields=False)
-        field = IrModel.search([("model", "=", self._name)]).display_code_field_id.name
-        return self._compute_display_field(field.name, "display_code_pattern")
+        return self._compute_display_field("display_code", "display_code_pattern")
     
+    def _inverse_display_code(self):
+        for record in self:
+            record.display_code = record.display_code
+
+    # low-level
+
     def _compute_display_field(self, field_name, pattern_path, res=True):
         """
         Compute a field (e.g. display_name or display_code) based on a pattern.
