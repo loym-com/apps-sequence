@@ -1,44 +1,33 @@
 from odoo import api, fields, models
 
-
 class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
+    _inherit = 'res.config.settings'
 
     project_project_display_name_pattern = fields.Char(
-        string="Project Display Name",
-        compute="_get_project_project_display_name_pattern",
-        inverse="_set_project_project_display_name_pattern",
-        default="{sequence_code} - {name}",
-        help=(
-            "Use sequence_code and name to include the sequence code "
-            "and the name of the project in the display name."
-        ),
+        related='ir_model_project_project.display_name_pattern',
+        readonly=False,
+        string="Project Display Name Pattern",
     )
     project_task_display_name_pattern = fields.Char(
-        string="Task Display Name",
-        compute="_get_project_task_display_name_pattern",
-        inverse="_set_project_task_display_name_pattern",
-        default="[{sequence_code}] {name}",
-        help=(
-            "Use sequence_code and name to include the sequence code "
-            "and the name of the task in the display name."
-        ),
+        related='ir_model_project_task.display_name_pattern',
+        readonly=False,
+        string="Task Display Name Pattern",
     )
 
-    def _get_project_project_display_name_pattern(self):
-        model = self.env["ir.model"].sudo().search([("model", "=", "project.project")])
+    ir_model_project_project = fields.Many2one(
+        'ir.model', string="Project Model", compute='_compute_ir_model_project_project', store=True
+    )
+
+    ir_model_project_task = fields.Many2one(
+        'ir.model', string="Task Model", compute='_compute_ir_model_project_task', store=True
+    )
+
+    @api.depends('company_id')
+    def _compute_ir_model_project_project(self):
         for record in self:
-            record.project_project_display_name_pattern = model.display_name_pattern
+            record.ir_model_project_project = self.env['ir.model'].search([('model', '=', 'project.project')], limit=1)
 
-    def _set_project_project_display_name_pattern(self):
-        model = self.env["ir.model"].sudo().search([("model", "=", "project.project")])
-        model.display_name_pattern = self.project_project_display_name_pattern
-
-    def _get_project_task_display_name_pattern(self):
-        model = self.env["ir.model"].sudo().search([("model", "=", "project.task")])
+    @api.depends('company_id')
+    def _compute_ir_model_project_task(self):
         for record in self:
-            record.project_task_display_name_pattern = model.display_name_pattern
-
-    def _set_project_task_display_name_pattern(self):
-        model = self.env["ir.model"].sudo().search([("model", "=", "project.task")])
-        model.display_name_pattern = self.project_task_display_name_pattern
+            record.ir_model_project_task = self.env['ir.model'].search([('model', '=', 'project.task')], limit=1)
