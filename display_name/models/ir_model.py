@@ -18,7 +18,6 @@ class IrModel(models.Model):
         self.use_custom_display_name = param == "True" if param else False
 
     use_custom_display_name = fields.Boolean(compute="_use_custom_display_name")
-
     display_name_pattern = fields.Char(
         string="Display Name",
         help=(
@@ -29,6 +28,14 @@ class IrModel(models.Model):
             "2. The name has a different value than the other fields.\n"
             "3. No other module will _compute_display_name()."
         ),
+    )
+    def _compute_store_display_code(self):
+        for model in self:
+            model.store_display_code = model.field_id.filtered(
+                lambda r: r.name == "display_code"
+            ).store
+    store_display_code = fields.Boolean(
+        compute="_compute_store_display_code",
     )
     display_code_pattern = fields.Char(
         string="Display Code",

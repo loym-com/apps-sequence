@@ -12,15 +12,17 @@
                     placeholder="{id:>05} - {name}"
                     invisible="not use_custom_display_name"
                 />
+                <field name="store_display_code" invisible="1"/>
                 <field
                     name="display_code_pattern"
                     placeholder="{id:>05}"
-                    invisible="not use_custom_display_name"
+                    invisible="not store_display_code"
                 />
                 <button
                     string="Set display_code where it is missing"
                     type="object"
                     name="set_missing_stored_display_code"
+                    invisible="not store_display_code"
                 />
             </field>
         </field>
