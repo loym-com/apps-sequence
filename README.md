@@ -1,6 +1,16 @@
 Sequences
 =========
 
+**EDIT**
+
+`display_name` and `project_display` replace all `sequence` modules.
+
+`display_name` has **display_code** (computed), and a mixin to store it.
+
+`project_display` uses the mixin. Then **display_code_pattern** is visible in ir.model.
+
+**Original**
+
 `sequence` and `display_name` are based on `project_sequence` and `project_task_code`.
 
 - `ir.model` has 2 new fields to store *sequence field* and *display name pattern*.
