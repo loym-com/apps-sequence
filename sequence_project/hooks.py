@@ -33,13 +33,3 @@ def post_init_hook(env):
             "company_id": False,
         }
     )
-
-def uninstall_hook(env):
-    """
-    Uninstall hook to remove the custom display name pattern and sequence.
-    """
-    project_model = env["ir.model"].sudo().search([("model", "=", "project.project")])
-    task_model = env["ir.model"].sudo().search([("model", "=", "project.task")])
-
-    project_model.display_name_pattern = False
-    task_model.display_name_pattern = False
