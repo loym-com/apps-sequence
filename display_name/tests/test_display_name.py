@@ -35,3 +35,8 @@ class TestDisplayName(TransactionCase):
                 name=self.group.name,
             )
         )
+
+    def test_invalid_display_name_pattern(self):
+        self.group_model.display_name_pattern = "{invalid_field}"
+        self.group._invalidate_cache(["display_name"])
+        self.assertEqual(self.group.display_name, "Test Group")
