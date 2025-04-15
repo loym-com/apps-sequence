@@ -115,7 +115,12 @@ class Base(models.AbstractModel):
     def _get_display_field_paths_from_pattern(self, pattern):
         regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
         field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
-        return tuple(field_paths)
+        # Return () if not all paths are valid
+        tuples = [self._get_display_value_and_type(p) for p in field_paths]
+        if (None, None) in tuples:
+            return ()
+        else:
+            return tuple(field_paths)
 
     def _get_display_pattern(self, pattern_path):
         if self._name == "ir.model":
