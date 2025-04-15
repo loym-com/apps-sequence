@@ -89,9 +89,11 @@ class IrModel(models.Model):
                 name = f"Set {self.sequence_code_field_id.field_description}"
                 Action.create(search_dict | {"name": name})
 
-    def _delete_patterns_with_sequence_code(self):
-        for record in self:
-            if "sequence_code" in record.display_code_pattern:
-                record.display_code_pattern = ""
-            if "sequence_code" in record.display_name_pattern:
-                record.display_name_pattern = ""
+    def _delete_patterns_with_sequence_code(self, model_names):
+        models = self.search([("model", "in", model_names)])
+        for model in models:
+            if "sequence_code" in model.display_code_pattern:
+                model.display_code_pattern = ""
+            if "sequence_code" in model.display_name_pattern:
+                model.display_name_pattern = ""
+        models.flush()
