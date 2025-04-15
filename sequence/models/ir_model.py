@@ -88,3 +88,10 @@ class IrModel(models.Model):
                 search_dict = {key: value for key, equal, value in search_domain}
                 name = f"Set {self.sequence_code_field_id.field_description}"
                 Action.create(search_dict | {"name": name})
+
+    def _delete_patterns_with_sequence_code(self):
+        for record in self:
+            if "sequence_code" in record.display_code_pattern:
+                record.display_code_pattern = ""
+            if "sequence_code" in record.display_name_pattern:
+                record.display_name_pattern = ""
