@@ -105,24 +105,31 @@ class Base(models.AbstractModel):
             setattr(record, display_fname, indexed_pattern.format(*vals.values()))
         return res
 
-    def _get_display_field_paths(self, pattern_fname):
+    def _get_display_field_paths(self, pattern_fname, validate=True):
         pattern = self._get_display_pattern(pattern_fname)
-        return self._get_display_field_paths_from_pattern(pattern)
+        return self._get_display_field_paths_from_pattern(pattern, validate)
 
-    def _get_display_field_paths_from_pattern(self, pattern):
+    def _get_display_field_paths_from_pattern(self, pattern, validate=True):
         regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
         field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
-        # Return () if not all paths are valid
+        if not validate:
+            return tuple(field_paths)
+        elif self._is_valid_display_field_paths(field_paths):
+            return tuple(field_paths)
+        else:
+            return ()
+
+    def _is_valid_display_field_paths(self, field_paths):
         tuples = [self.browse()._get_display_value_and_type(p) for p in field_paths]
         if (None, None) in tuples:
-            return ()
+            return False
         else:
-            return tuple(field_paths)
+            return True
 
     def _get_display_pattern(self, pattern_fname):
         """pattern_fname: The name of the ir.model field with the pattern."""
-        if self._name == "ir.model":
-            return ""
+        # if self._name == "ir.model":
+        #     return ""
 
         # To install apps without errors:
         # - Do not prefetch fields.

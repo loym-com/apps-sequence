@@ -1,5 +1,6 @@
 import logging
 
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 _logger = logging.getLogger(__name__)
@@ -37,6 +38,14 @@ class TestDisplayName(TransactionCase):
         )
 
     def test_invalid_display_name_pattern(self):
-        self.group_model.display_name_pattern = "{invalid_field}"
+        self.env.cr.execute(
+            f"UPDATE ir_model "
+            f"SET display_name_pattern = '{{invalid_field}}'"
+            f"WHERE id = {self.group_model.id};"
+        )
         self.group._invalidate_cache(["display_name"])
         self.assertEqual(self.group.display_name, "Test Group")
+
+    def test_set_invalid_display_name_pattern(self):
+        with self.assertRaises(ValidationError):
+            self.group_model.display_name_pattern = "{invalid_field}"

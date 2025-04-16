@@ -54,32 +54,14 @@ class IrModel(models.Model):
         return self._check_display_field_paths("display_code_pattern")
     
     def _check_display_field_paths(self, field_name):
-        def valid(field_path):
-            try:
-                field_names = field_path.split('.')
-                current_model = self.env[model.model]
-                for field_name in field_names:
-                    has_id = hasattr(current_model, 'id')
-                    fields = current_model._fields
-                    field_def = current_model._fields.get(field_name)
-                    if not field_def:
-                        return False
-                    if field_def.type in ('many2one', 'one2many', 'many2many'):
-                        current_model = self.env[field_def.comodel_name]
-                    else:
-                        pass
-                return True
-            except Exception:
-                return False
-
         for model in self:
-            field_paths = model._get_display_field_paths(field_name)
-            for field_path in field_paths:
-                if not valid(field_path):
-                    raise ValidationError(
-                        f"_check_display_name_field_paths: "
-                        f"field_path {field_path} is not valid."
-                    )
+            Model = self.env[model.model]
+            field_paths = Model._get_display_field_paths(field_name, validate=False)
+            if not Model._is_valid_display_field_paths(field_paths):
+                raise ValidationError(
+                    f"_check_display_name_field_paths: "
+                    f"At least one field is not valid: {field_paths}"
+                )
 
     def set_missing_stored_display_code(self):
         self.ensure_one()
