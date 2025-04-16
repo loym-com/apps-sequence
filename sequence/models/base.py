@@ -1,5 +1,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
 
+import psycopg2
+
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
@@ -14,7 +16,9 @@ class Base(models.AbstractModel):
         return super().create(vals_list)
     
     def write(self, vals):
-        """Set name = sequence code if removing name or no existing name"""
+        """Set name = sequence code if removing name or no existing name
+
+        Checking if the record has a name may be affect the performance..."""
 
         if vals.get("name") or "name" not in self._fields:
             return super().write(vals)
@@ -23,8 +27,11 @@ class Base(models.AbstractModel):
         if "sequence_code_field_id" not in model._fields:
             return super().write(vals)
 
-        field = model.sequence_code_field_id
-        if not field:
+        try:
+            field = model.sequence_code_field_id
+            if not field:
+                return super().write(vals)
+        except psycopg2.errors.UndefinedColumn:
             return super().write(vals)
 
         for record in self:
