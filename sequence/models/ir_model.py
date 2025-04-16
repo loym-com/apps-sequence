@@ -53,7 +53,7 @@ class IrModel(models.Model):
                     f"{func_name}: field {field.name} type should be char or text."
                 )
             self._create_missing_sequence(code=self.model)
-            self._create_missing_sequence_code_action()
+            # self._create_missing_sequence_code_action()
 
     def _create_missing_sequence(self, code, values={}):
         Sequence = self.env["ir.sequence"]
@@ -73,18 +73,27 @@ class IrModel(models.Model):
             )
             _logger.info(f"Created sequence {sequence.name}")
 
-    def _create_missing_sequence_code_action(self):
-        if self.sequence_code_field_id:
-            search_domain = [
-                ("model_id", "=", self.id),
-                ("binding_model_id", "=", self.id),
-                ("usage", "=", "ir_actions_server"),
-                ("state", "=", "code"),
-                ("code", "=", "for rec in records:\n  rec.set_sequence_code()"),
-            ]
-            Action = self.env["ir.actions.server"]
-            action = Action.search(search_domain)
-            if not action:
-                search_dict = {key: value for key, equal, value in search_domain}
-                name = f"Set {self.sequence_code_field_id.field_description}"
-                Action.create(search_dict | {"name": name})
+    def set_missing_sequence_code(self):
+        self.ensure_one()
+        field = self.sequence_code_field_id
+        if field and field.store:
+            Model = self.env[self.model].with_context(active_test=False)
+            records = Model.search([(field.name, "=", False)])
+            for record in records:
+                record.set_sequence_code()
+
+    # def _create_missing_sequence_code_action(self):
+    #     if self.sequence_code_field_id:
+    #         search_domain = [
+    #             ("model_id", "=", self.id),
+    #             ("binding_model_id", "=", self.id),
+    #             ("usage", "=", "ir_actions_server"),
+    #             ("state", "=", "code"),
+    #             ("code", "=", "for rec in records:\n  rec.set_sequence_code()"),
+    #         ]
+    #         Action = self.env["ir.actions.server"]
+    #         action = Action.search(search_domain)
+    #         if not action:
+    #             search_dict = {key: value for key, equal, value in search_domain}
+    #             name = f"Set {self.sequence_code_field_id.field_description}"
+    #             Action.create(search_dict | {"name": name})

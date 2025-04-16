@@ -12,6 +12,12 @@
                     options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
                     invisible="not use_custom_sequences"
                 />
+                <button
+                    string="Set sequence code where it is missing"
+                    type="object"
+                    name="set_missing_sequence_code"
+                    invisible="not use_custom_sequences or not sequence_code_field_id"
+                />
             </field>
         </field>
     </record>

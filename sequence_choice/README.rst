@@ -101,7 +101,7 @@ Credits
 Authors
 -------
 
-* Loym AS
+* Loym
 
 Contributors
 ------------
