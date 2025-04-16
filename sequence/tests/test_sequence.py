@@ -82,4 +82,4 @@ class TestSequence(TransactionCase):
         record = self.env[model.model].create({"type": "other"})
         self.assertEqual(record.name, "partner-00001")
 
-    # TODO: test sequence.mixin
+    # TODO: test sequence.code.mixin

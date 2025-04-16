@@ -1,9 +1,9 @@
 from odoo import models, fields
 
 
-class SequenceMixin(models.AbstractModel):
-    _name = "sequence.mixin"
-    _description = "Sequence Mixin"
+class SequenceCodeMixin(models.AbstractModel):
+    _name = "sequence.code.mixin"
+    _description = "Sequence Code Mixin"
     _sql_constraints = [
         (
             "unique_sequence_code_per_company",

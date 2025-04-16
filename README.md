@@ -21,7 +21,7 @@ Sequences
 It shows how one may implement a sequence for a model:
 
 - The module should depend on `sequence`.
-- Inherit "sequence.mixin"
+- Inherit "sequence.code.mixin"
 - Add views to show the sequence_code.
 - Optionally, depend on `display_name`.
 - Use a post_init_hook to set a default sequence and display_name_pattern.
