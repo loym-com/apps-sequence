@@ -20,7 +20,9 @@ class Base(models.AbstractModel):
 
         Checking if the record has a name may be affect the performance..."""
 
-        if self.env.context.get("uninstall_mode"):
+        # Relevant for uninstalling the module
+        context = self.env.context
+        if "prefetch_fields" in context and not context.get("prefetch_fields"):
             return super().write(vals)
 
         if vals.get("name") or "name" not in self._fields:
