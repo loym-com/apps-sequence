@@ -52,14 +52,11 @@ class Base(models.AbstractModel):
 
     # low-level
 
-    def _compute_display_field(self, field_name, pattern_path, res=True):
+    def _compute_display_field(self, display_fname, pattern_fname, res=True):
         """
         Compute a field (e.g. display_name or display_code) based on a pattern.
-        field_name: The name of the field to compute.
-        pattern_path: The path (from self or ir.model) to the field with the pattern.
-            Examples:
-            - "display_name_pattern" (from ir.model)
-            - "related_id.pattern" (from self)
+        display_fname: The name of the display field to compute.
+        pattern_fname: The name of the ir.model field with the pattern.
         """
 
         def get_indexed_pattern(pattern, field_paths):
@@ -73,7 +70,7 @@ class Base(models.AbstractModel):
                     return full_placeholder
             return re.sub(r"\{([\w.]+)(:[^}]*)?\}", replace_path_with_index, pattern)
 
-        pattern = self._get_display_pattern(pattern_path)
+        pattern = self._get_display_pattern(pattern_fname)
         field_paths = self._get_display_field_paths_from_pattern(pattern)
         if not field_paths:
             return res
@@ -81,7 +78,7 @@ class Base(models.AbstractModel):
 
         for record in self:
             # Skip if value exists in stored field
-            if record._fields[field_name].store and getattr(record, field_name):
+            if record._fields[display_fname].store and getattr(record, display_fname):
                 continue
             # Collect values, and check for false values
             vals = {}
@@ -105,43 +102,41 @@ class Base(models.AbstractModel):
             if false_value or name_not_unique:
                 continue
             # Set the display field value
-            setattr(record, field_name, indexed_pattern.format(*vals.values()))
+            setattr(record, display_fname, indexed_pattern.format(*vals.values()))
         return res
 
-    def _get_display_field_paths(self, pattern_path):
-        pattern = self._get_display_pattern(pattern_path)
+    def _get_display_field_paths(self, pattern_fname):
+        pattern = self._get_display_pattern(pattern_fname)
         return self._get_display_field_paths_from_pattern(pattern)
 
     def _get_display_field_paths_from_pattern(self, pattern):
         regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
         field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
         # Return () if not all paths are valid
-        tuples = [self._get_display_value_and_type(p) for p in field_paths]
+        tuples = [self.browse()._get_display_value_and_type(p) for p in field_paths]
         if (None, None) in tuples:
             return ()
         else:
             return tuple(field_paths)
 
-    def _get_display_pattern(self, pattern_path):
+    def _get_display_pattern(self, pattern_fname):
+        """pattern_fname: The name of the ir.model field with the pattern."""
         if self._name == "ir.model":
             return ""
 
-        pattern = ""
-        self_pattern = self._get_display_value_and_type(pattern_path)
-        if self_pattern and self_pattern[0]:
-            pattern = self_pattern[0] or ""
+        # To install apps without errors:
+        # - Do not prefetch fields.
+        # - Order by a field which always exists.
+        IrModel = self.env["ir.model"].sudo().with_context(prefetch_fields=False)
+        model = IrModel.search([("model", "=", self._name)], order="id")
+        model_pattern = model._get_display_value_and_type(pattern_fname)
+        if model_pattern and model_pattern[0]:
+            return model_pattern[0] or ""
         else:
-            # To install apps without errors:
-            # - Do not prefetch fields.
-            # - Order by a field which always exists.
-            IrModel = self.env["ir.model"].sudo().with_context(prefetch_fields=False)
-            model = IrModel.search([("model", "=", self._name)], order="id")
-            model_pattern = model._get_display_value_and_type(pattern_path)
-            if model_pattern and model_pattern[0]:
-                pattern = model_pattern[0] or ""
-        return pattern
+            return ""
 
     def _get_display_value_and_type(self, field_path):
+        # self: 0-1 records
         # field_path may use dot notation, e.g. related_id.field"
         fields = field_path.split(".")
         value = self
