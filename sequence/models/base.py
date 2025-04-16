@@ -20,18 +20,15 @@ class Base(models.AbstractModel):
 
         Checking if the record has a name may be affect the performance..."""
 
+        if self.env.context.get("uninstall_mode"):
+            return super().write(vals)
+
         if vals.get("name") or "name" not in self._fields:
             return super().write(vals)
 
         model = self.env["ir.model"].sudo().search([("model", "=", self._name)])
-        if "sequence_code_field_id" not in model._fields:
-            return super().write(vals)
-
-        try:
-            field = model.sequence_code_field_id
-            if not field:
-                return super().write(vals)
-        except psycopg2.errors.UndefinedColumn:
+        field = model.sequence_code_field_id
+        if not field:
             return super().write(vals)
 
         for record in self:

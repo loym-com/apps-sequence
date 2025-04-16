@@ -10,6 +10,6 @@
     ],
     "depends": ["sequence"],
     "license": "AGPL-3",
-    "version": "18.0.1.0.14",
+    "version": "18.0.1.0.15",
     "website": "https://www.loym.com",
 }
