@@ -15,10 +15,14 @@ class Base(models.AbstractModel):
     
     def write(self, vals):
         """Set name = sequence code if removing name or no existing name"""
+
         if vals.get("name") or "name" not in self._fields:
             return super().write(vals)
 
         model = self.env["ir.model"].sudo().search([("model", "=", self._name)])
+        if "sequence_code_field_id" not in model._fields:
+            return super().write(vals)
+
         field = model.sequence_code_field_id
         if not field:
             return super().write(vals)
