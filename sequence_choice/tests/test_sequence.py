@@ -15,7 +15,6 @@ class TestSequence(TransactionCase):
 
     def test_choice_boolean(self):
         model = self.env.ref("base.model_res_groups")
-        model.sequence_code_field_id = self._get_field(model.id, "comment").id
         model.sequence_choice_field_id = self._get_field(model.id, "share").id
         record = self.env[model.model].create(
             {"name": "Test Group", "share": False}
@@ -28,7 +27,6 @@ class TestSequence(TransactionCase):
 
     # def test_choice_many2one(self):
     #     model = self.env.ref("base.model_res_partner")
-    #     model.sequence_code_field_id = self._get_field(model.id, "ref").id
     #     model.sequence_choice_field_id = self._get_field(model.id, "title").id
     #     title = self.env.ref("base.res_partner_title_madam")
     #     record = self.env[model.model].create(
@@ -42,7 +40,6 @@ class TestSequence(TransactionCase):
 
     def test_choice_selection(self):
         model = self.env.ref("base.model_res_lang")
-        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
         model.sequence_choice_field_id = self._get_field(model.id, "direction").id
         record = self.env[model.model].create(
             {"name": "Test Language", "direction": "ltr", "code": "test"}
@@ -56,7 +53,6 @@ class TestSequence(TransactionCase):
     def test_count_sequences(self):
         Sequence = self.env["ir.sequence"]
         model = self.env.ref("base.model_res_lang")
-        model.sequence_code_field_id = self._get_field(model.id, "iso_code").id
         seq_count1 = Sequence.search_count([])
         model.sequence_choice_field_id = self._get_field(model.id, "direction").id
         seq_count2 = Sequence.search_count([])
