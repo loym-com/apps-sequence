@@ -5,23 +5,36 @@ import psycopg2
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
-def get_value(record_or_dict, field):
-    """Get a value in a record or dict."""
-    if isinstance(record_or_dict, dict):
-        return record_or_dict.get(field)
-    elif isinstance(record_or_dict, models.BaseModel):
-        return getattr(record_or_dict, field)
+def get_value(item, field):
+    """ Get a value in a record or dict.
+        item: record or dict
+        field: field name to get value
+        Returns: value (None if not found in dict, or if record value is falsy)
+    """
+    if isinstance(item, dict):
+        if field in item:
+            return item[field]
+        else:
+            return None
+    elif isinstance(item, models.BaseModel):
+        return getattr(item, field, None)
     else:
-        raise ValueError(f"Invalid type: {type(record_or_dict)}")
+        raise ValueError(f"Invalid type: {type(item)}")
 
-def set_value(record_or_dict, field, value):
-    """Set a value in a record or dict."""
-    if isinstance(record_or_dict, dict):
-        record_or_dict[field] = value
-    elif isinstance(record_or_dict, models.BaseModel):
-        setattr(record_or_dict, field, value)
+def is_none(item, field):
+    return get_value(item, field) is None
+
+def set_value(item, field, value):
+    """ Set a value in a record or dict.
+        item: record or dict
+        field: field name to set value
+    """
+    if isinstance(item, dict):
+        item[field] = value
+    elif isinstance(item, models.BaseModel):
+        setattr(item, field, value)
     else:
-        raise ValueError(f"Invalid type: {type(record_or_dict)}")
+        raise ValueError(f"Invalid type: {type(item)}")
 
 
 class Base(models.AbstractModel):
@@ -75,7 +88,7 @@ class Base(models.AbstractModel):
 
         # Handle both create and write
         for item in vals_list or self:
-            if get_value(item, "unique_code") and not get_value(item, "name"):
+            if get_value(item, "unique_code") and is_none(item, "name"):
                 set_value(item, "name", item["unique_code"])
         return vals_list
 
@@ -119,7 +132,7 @@ class Base(models.AbstractModel):
         1) field_path is "__sequence__"
         2) ir.model has unique_code_sequence_id
         """
-        if field_path == "__sequence__":
+        if field_path == "__sequence__" and is_none(item, "unique_code"):
             sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
             if sequence:
                 return (sequence.next_by_id(), "char")

@@ -19,8 +19,20 @@ class TestProjectSequence(TransactionCase):
             "manager",
             "project.group_project_manager,analytic.group_analytic_accounting",
         )
-        cls.pjr_seq = cls.env["ir.sequence"].search([("code", "=", "project.project")])
-        cls.pjr_seq.date_range_ids.unlink()
+        cls.prj_seq = cls.env["ir.sequence"].create(
+            {
+                "name": "Project sequence",
+                "code": "project.sequence",
+                "prefix": "%(y)s-",
+                "use_date_range": True,
+                "padding": 5,
+                "company_id": False,
+            }
+        )
+        cls.ir_model = cls.env["project.project"]._get_ir_model()
+        cls.ir_model.display_name_pattern = "{unique_code} - {name}"
+        cls.ir_model.unique_code_pattern = "{__sequence__}"
+        cls.ir_model.unique_code_sequence_id = cls.prj_seq.id
         default_plan_id = cls.env["account.analytic.plan"].search([], limit=1)
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
@@ -36,7 +48,7 @@ class TestProjectSequence(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.pjr_seq._get_current_sequence().number_next = 11
+        self.prj_seq._get_current_sequence().number_next = 11
 
     @users("manager")
     def test_sequence_after_creation(self):
@@ -101,7 +113,7 @@ class TestProjectSequence(TransactionCase):
         """Sequence cannot have duplicates."""
         proj1 = self.env["project.project"].create({"name": "one"})
         self.assertEqual(proj1.unique_code, "23-00011")
-        self.pjr_seq._get_current_sequence().number_next = 11
+        self.prj_seq._get_current_sequence().number_next = 11
         with self.assertRaises(IntegrityError), self.env.cr.savepoint():
             proj1 = self.env["project.project"].create({"name": "two"})
 

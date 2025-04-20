@@ -17,7 +17,7 @@ class TestDisplayName(TransactionCase):
         )
 
     def test_1_display_name(self):
-        self.report_model.display_name_pattern = ""
+        self.report_model.display_name_pattern = False
         self.report._invalidate_cache(["display_name"])
         self.assertEqual(self.report.display_name, "Test Report")
 

@@ -5,13 +5,29 @@ import odoo.tests.common as common
 
 
 class TestProjectTask(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUp()
+        cls.task_model = cls.env["project.task"]
+        cls.ir_sequence_model = cls.env["ir.sequence"]
+        cls.task_sequence = cls.env["ir.sequence"].create(
+            {
+                "name": "Task code",
+                "code": "project.task",
+                "padding": 4,
+                "prefix": "T",
+                "company_id": False,
+            }
+        )
+        cls.ir_model = cls.env["project.task"]._get_ir_model()
+        cls.ir_model.display_name_pattern = "[{unique_code}] {name}"
+        cls.ir_model.unique_code_pattern = "{__sequence__}"
+        cls.ir_model.unique_code_sequence_id = cls.task_sequence.id
+
     def setUp(self):
         super().setUp()
-        self.task_model = self.env["project.task"]
-        self.ir_sequence_model = self.env["ir.sequence"]
-        self.task_sequence = self.env["ir.sequence"].search(
-            [("code", "=", "project.task")]
-        )
+        self.task_sequence._get_current_sequence().number_next = 1
 
     def test_old_task_unique_code_assign(self):
         tasks = self.task_model.search([])
