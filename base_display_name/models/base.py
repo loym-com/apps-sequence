@@ -91,7 +91,7 @@ class Base(models.AbstractModel):
             name_vals = {}
             false_value = False
             for i, field_path in enumerate(field_paths):
-                value, value_type = self._get_display_value_and_type(item, field_path)
+                value, value_type = self._get_display_value(item, field_path)
                 if not value and value_type != "boolean":
                     false_value = True
                     break
@@ -127,7 +127,7 @@ class Base(models.AbstractModel):
 
     def _is_valid_display_field_paths(self, field_paths):
         tuples = [
-            self._get_display_value_and_type(self.browse(), field_path)
+            self._get_display_value(self.browse(), field_path)
             for field_path in field_paths
         ]
         if (None, None) in tuples:
@@ -143,7 +143,7 @@ class Base(models.AbstractModel):
         # To install apps without errors:
         # - Do not prefetch fields.
         model = self._get_ir_model(prefetch_fields=False)
-        model_pattern = model._get_display_value_and_type(model, pattern_fname)
+        model_pattern = model._get_display_value(model, pattern_fname)
         if model_pattern and model_pattern[0]:
             return model_pattern[0] or ""
         else:
@@ -157,17 +157,20 @@ class Base(models.AbstractModel):
         # - Order by a field which always exists.
         return IrModel.search([("model", "=", self._name)], order="id")
 
-    def _get_display_value_and_type(self, item, field_path):
-        # item: 0-1 records or vals to create a record
-        # field_path may use dot notation, e.g. related_id.field"
+    def _get_display_value(self, item, field_path):
+        """
+        item: 0-1 records or vals to create a record
+        field_path may use dot notation, e.g. related_id.field"
+        return: (value, value_type)
+        """
         fields = field_path.split(".")
         model = self
         value = item
         for field in fields:
             if field in model._fields:
-                field_type = model._fields.get(field).type
+                value_type = model._fields.get(field).type
                 value = value[field]
                 model = value
             else:
                 return (None, None)
-        return (value, field_type)
+        return (value, value_type)

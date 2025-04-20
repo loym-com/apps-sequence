@@ -29,21 +29,31 @@ class IrModel(models.Model):
             "2. Set this field again, and save."
     )
 
-    # @api.constrains("sequence_choice_field_id")
-    # def set_sequences(self):
-    #     self.ensure_one()
-    #     if self.sequence_choice_field_id:
-    #         field = self.sequence_choice_field_id
-    #         if field.ttype == "boolean":
-    #             values = ["True", "False"]
-    #         # elif field.ttype == "many2one":
-    #         #     values = self.env[field.relation].search([]).mapped("id")
-    #         #     values = [str(value) for value in values]
-    #         elif field.ttype == "selection":
-    #             values = field.selection_ids.mapped("value")
-    #         else:
-    #             raise ValidationError(f"Unsupported field type {field.ttype}")
+    @api.constrains("sequence_choice_field_id")
+    def set_sequences(self):
+        self.ensure_one()
+        Sequence = self.env["ir.sequence"]
+        if self.sequence_choice_field_id:
+            field = self.sequence_choice_field_id
+            if field.ttype == "boolean":
+                values = ["True", "False"]
+            # elif field.ttype == "many2one":
+            #     values = self.env[field.relation].search([]).mapped("id")
+            #     values = [str(value) for value in values]
+            elif field.ttype == "selection":
+                values = field.selection_ids.mapped("value")
+            else:
+                raise ValidationError(f"Unsupported field type {field.ttype}")
 
-    #         for value in values:
-    #             code = f"{self.model}.{field.name}.{value}"
-    #             self._create_missing_sequence(code)
+            for value in values:
+                code = f"{self.model}.{field.name}.{value}"
+                sequence = Sequence.search([("code", "=", code)])
+                if not sequence:
+                    Sequence.create(
+                        {
+                            "name": code,
+                            "code": code,
+                            "prefix": f"{value}-",
+                            "padding": 5,
+                        }
+                    )

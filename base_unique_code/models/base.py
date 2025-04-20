@@ -114,7 +114,7 @@ class Base(models.AbstractModel):
 
     # Override methods in base_display_name to avoid checking __sequence__.
 
-    def _get_display_value_and_type(self, item, field_path):
+    def _get_display_value(self, item, field_path):
         """Use sequence if:
         1) field_path is "__sequence__"
         2) ir.model has unique_code_sequence_id
@@ -123,7 +123,7 @@ class Base(models.AbstractModel):
             sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
             if sequence:
                 return (sequence.next_by_id(), "char")
-        return super()._get_display_value_and_type(item, field_path)
+        return super()._get_display_value(item, field_path)
 
     def _is_valid_display_field_paths(self, field_paths):
         """Do not check __sequence__."""
