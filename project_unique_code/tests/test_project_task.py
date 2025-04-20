@@ -8,7 +8,7 @@ class TestProjectTask(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUp()
+        super().setUpClass()
         cls.task_model = cls.env["project.task"]
         cls.ir_sequence_model = cls.env["ir.sequence"]
         cls.task_sequence = cls.env["ir.sequence"].create(

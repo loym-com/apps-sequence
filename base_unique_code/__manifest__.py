@@ -11,6 +11,7 @@
     "depends": [
         "base_display_name",
         "base_setup",
+        "mail", # problem that the field "unique_code" exists everywhere
     ],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",

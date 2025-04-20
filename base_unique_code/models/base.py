@@ -88,44 +88,11 @@ class Base(models.AbstractModel):
 
         # Handle both create and write
         for item in vals_list or self:
-            if get_value(item, "unique_code") and is_none(item, "name"):
+            if get_value(item, "unique_code") and not get_value(item, "name"):
                 set_value(item, "name", item["unique_code"])
         return vals_list
 
-
-    # def set_sequence_code(self, vals_list=None):
-    #     model = self.env["ir.model"].sudo().search([("model", "=", self._name)])
-    #     # if "sequence_code_field_id" in model._fields and model.sequence_code_field_id:
-    #     if model.sequence_code_field_id:
-    #         FieldSudo = self.env["ir.model.fields"].sudo()
-    #         field = FieldSudo.browse(model.sequence_code_field_id.id)
-    #         if vals_list:
-    #             # create
-    #             for vals in vals_list:
-    #                 if field.name not in vals:
-    #                     # sequence code (sequence_choice needs vals)
-    #                     vals[field.name] = self._get_next_sequence_code(vals)
-    #                     # name (if empty)
-    #                     if "name" in self._fields and not vals.get("name"):
-    #                         vals["name"] = vals[field.name]
-    #         else:
-    #             # write
-    #             for record in self:
-    #                 if not getattr(record, field.name):
-    #                     # sequence code (sequence_choice needs vals)
-    #                     setattr(record, field.name, record._get_next_sequence_code())
-    #                     # name (if empty)
-    #                     if "name" in self._fields and not record.name:
-    #                         record.name = getattr(record, field.name)
-    #     return vals_list
-
-    # def _get_next_sequence_code(self, vals=None):
-    #     "vals is needed by sequence_choice to read values of a record to be created."
-    #     return self.env["ir.sequence"].next_by_code(self._name)
-
-
-
-    # Override methods in base_display_name to avoid checking __sequence__.
+    # Override methods in base_display_name, to handle __sequence__.
 
     def _get_display_value(self, item, field_path):
         """Use sequence if:

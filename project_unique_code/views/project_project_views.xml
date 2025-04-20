@@ -15,7 +15,11 @@
                             class="oe_inline"
                             string="Sequence code:"
                         />
-                        <field name="unique_code" class="oe_inline oe_input_align" />
+                        <field
+                            name="unique_code"
+                            class="oe_inline oe_input_align"
+                            readonly="1"
+                        />
                     </div>
                 </div>
             </xpath>
