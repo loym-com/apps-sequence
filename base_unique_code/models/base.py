@@ -5,36 +5,7 @@ import psycopg2
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
-def get_value(item, field):
-    """ Get a value in a record or dict.
-        item: record or dict
-        field: field name to get value
-        Returns: value (None if not found in dict, or if record value is falsy)
-    """
-    if isinstance(item, dict):
-        if field in item:
-            return item[field]
-        else:
-            return None
-    elif isinstance(item, models.BaseModel):
-        return getattr(item, field, None)
-    else:
-        raise ValueError(f"Invalid type: {type(item)}")
-
-def is_none(item, field):
-    return get_value(item, field) is None
-
-def set_value(item, field, value):
-    """ Set a value in a record or dict.
-        item: record or dict
-        field: field name to set value
-    """
-    if isinstance(item, dict):
-        item[field] = value
-    elif isinstance(item, models.BaseModel):
-        setattr(item, field, value)
-    else:
-        raise ValueError(f"Invalid type: {type(item)}")
+from odoo.addons.base_display_name.tools import get_value, is_none, set_value
 
 
 class Base(models.AbstractModel):
@@ -51,8 +22,14 @@ class Base(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        vals_list = self.set_unique_code_and_name(vals_list)
-        return super().create(vals_list)
+        """Set unique_code and name, if unique_code is not set."""
+        vals_list_ok = [vals for vals in vals_list if "unique_code" in vals]
+        vals_list_todo = [vals for vals in vals_list if "unique_code" not in vals]
+        # Create first, so we can use the record "id" etc. in the pattern
+        records_ok = super().create(vals_list_ok)
+        records_todo = super().create(vals_list_todo)
+        records_todo.set_unique_code_and_name()
+        return records_ok | records_todo
 
     def write(self, vals):
         super().write(vals)
