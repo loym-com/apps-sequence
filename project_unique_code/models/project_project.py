@@ -2,7 +2,8 @@ from odoo import api, fields, models
 
 
 class ProjectProject(models.Model):
-    _inherit = "project.project"
+    _name = "project.project"
+    _inherit = ["project.project", "unique.code.mixin"]
 
     name = fields.Char(
         # We actually require it with the SQL constraint, but it is disabled

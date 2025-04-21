@@ -8,8 +8,8 @@ from odoo.tools.translate import _
 from odoo.addons.base_display_name.tools import get_value, is_none, set_value
 
 
-class Base(models.AbstractModel):
-    _inherit = "base"
+class UniqueCodeMixin(models.AbstractModel):
+    _name = "unique.code.mixin"
     _sql_constraints = [
         (
             "unique_unique_code",

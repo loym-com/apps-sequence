@@ -6,7 +6,8 @@ PROJECT_TASK_WRITABLE_FIELDS = {
 
 
 class ProjectTask(models.Model):
-    _inherit = "project.task"
+    _name = "project.task"
+    _inherit = ["project.task", "unique.code.mixin"]
 
     @property
     def SELF_WRITABLE_FIELDS(self):
