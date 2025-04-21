@@ -12,7 +12,7 @@ class Base(models.AbstractModel):
     _inherit = "base"
     _sql_constraints = [
         (
-            "unique_code",
+            "unique_unique_code",
             "UNIQUE(unique_code)",
             "unique_code must be unique!",
         ),
