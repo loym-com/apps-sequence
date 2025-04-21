@@ -4,7 +4,7 @@
 
 {
     "name": "Product Unique Code",
-    "version": "18.0.3.0.1",
+    "version": "18.0.3.0.2",
     "author": "Cetmix, Loym",
     "website": "https://www.loym.com",
     "license": "LGPL-3",
@@ -15,6 +15,7 @@
         "product",
     ],
     "data": [
+        "data/ir_actions_server_data.xml",
         "views/product_product_views.xml",
         "views/product_template_views.xml",
         "views/res_config_settings_views.xml",

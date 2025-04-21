@@ -6,6 +6,7 @@
     "summary": "",
     "author": "Loym",
     "data": [
+        "data/ir_actions_server_data.xml",
         "views/project_project_views.xml",
         "views/project_task_views.xml",
         "views/res_config_settings_views.xml",
@@ -15,6 +16,6 @@
         "project",
     ],
     "license": "LGPL-3",
-    "version": "18.0.3.0.1",
+    "version": "18.0.3.0.2",
     "website": "https://www.loym.com",
 }

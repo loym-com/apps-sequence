@@ -10,41 +10,72 @@
                     <div class="app_settings_block" data-string="Display" string="Display">
                         <h2>Product Template and Variant Display</h2>
                         <div class="row mt16 o_settings_container">
+                            <div>
+                                <p>Pattern examples:
+                                    <b>5 digits</b>: {id:0>5} -
+                                    <b>date</b>: {create_date:%Y-%m-%d} -
+                                    <b>related</b>: {related_id.field} -
+                                    <b>sequence</b>: {_sequence_}
+                                </p>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_template" invisible="1"/>
-                                <label for="product_template_display_name_pattern" string="Template Name Pattern"/>
-                                <field name="product_template_display_name_pattern" class="w-100"/>
+                                <label for="product_template_display_name_pattern" string="Computed Product Template Name Pattern"/>
+                                <field
+                                    name="product_template_display_name_pattern"
+                                    class="w-100"
+                                    placeholder="{unique_code} - {name}"
+                                />
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_product" invisible="1"/>
-                                <label for="product_product_display_name_pattern" string="Variant Name Pattern"/>
-                                <field name="product_product_display_name_pattern" class="w-100"/>
+                                <label for="product_product_display_name_pattern" string="Computed Product Variant Name Pattern"/>
+                                <field
+                                    name="product_product_display_name_pattern"
+                                    class="w-100"
+                                    placeholder="{unique_code} - {name}"
+                                />
                             </div>
 
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_template" invisible="1"/>
-                                <label for="product_template_unique_code_pattern" string="Template Number Pattern"/>
-                                <field name="product_template_unique_code_pattern" class="w-100" readonly="product_template_unique_code_from_variant"/>
+                                <label for="product_template_unique_code_pattern" string="Stored Unique Product Template No. Pattern"/>
+                                <field
+                                    name="product_template_unique_code_pattern"
+                                    class="w-100"
+                                    placeholder="{_sequence_}"
+                                    readonly="product_template_unique_code_from_variant"
+                                />
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_product" invisible="1"/>
-                                <label for="product_product_unique_code_pattern" string="Variant Number Pattern"/>
-                                <field name="product_product_unique_code_pattern" class="w-100"/>
+                                <label for="product_product_unique_code_pattern" string="Stored Unque Product Variant No. Pattern"/>
+                                <field
+                                    name="product_product_unique_code_pattern"
+                                    class="w-100"
+                                    placeholder="{_sequence_}"
+                                />
                             </div>
 
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_template" invisible="1"/>
-                                <label for="product_template_unique_code_sequence_id" string="Template Sequence"/>
-                                <field name="product_template_unique_code_sequence_id" class="w-100"/>
+                                <label for="product_template_unique_code_sequence_id" string="Product Template Sequence"/>
+                                <field
+                                    name="product_template_unique_code_sequence_id"
+                                    class="w-100"
+                                />
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_product" invisible="1"/>
-                                <label for="product_product_unique_code_sequence_id" string="Variant Sequence"/>
-                                <field name="product_product_unique_code_sequence_id" class="w-100"/>
+                                <label for="product_product_unique_code_sequence_id" string="Producct Variant Sequence"/>
+                                <field
+                                    name="product_product_unique_code_sequence_id"
+                                    class="w-100"
+                                />
                             </div>
 
                             <div class="col-12 col-lg-6 o_setting_box">
-                                <label for="product_template_unique_code_from_variant" string="Get Template Number From Variant"/>
+                                <label for="product_template_unique_code_from_variant" string="Get Product Template No. From Variant"/>
                                 <div class="o_setting_left_pane">
                                     <field name="product_template_unique_code_from_variant" class="w-100" readonly="product_template_unique_code_pattern"/>
                                 </div>

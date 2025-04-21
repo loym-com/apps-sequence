@@ -4,7 +4,7 @@
 
 {
     "name": "CRM Unique Code",
-    "version": "18.0.3.0.1",
+    "version": "18.0.3.0.2",
     "author": "Loym",
     "website": "https://www.loym.com",
     "license": "LGPL-3",
@@ -14,6 +14,7 @@
         "crm",
     ],
     "data": [
+        "data/ir_actions_server_data.xml",
         "views/crm_lead_views.xml",
         "views/res_config_settings_views.xml",
     ],

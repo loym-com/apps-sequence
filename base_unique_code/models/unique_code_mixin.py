@@ -19,7 +19,12 @@ class UniqueCodeMixin(models.AbstractModel):
         ),
     ]
 
-    unique_code = fields.Char(copy=False, store=True, index=True)
+    unique_code = fields.Char(
+        string="Unique No.",
+        copy=False,
+        index=True,
+        store=True,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
