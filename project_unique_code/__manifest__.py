@@ -15,6 +15,6 @@
         "project",
     ],
     "license": "LGPL-3",
-    "version": "18.0.2.0.4",
+    "version": "18.0.2.0.5",
     "website": "https://www.loym.com",
 }

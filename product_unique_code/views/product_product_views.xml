@@ -20,7 +20,6 @@
         <field name="priority">99</field>
         <field name="inherit_id" ref="product.product_search_form_view" />
         <field name="arch" type="xml">
-            <!-- Add search field for unique Product Number -->
             <field name="name" position="after">
                 <field
                     name="unique_code"
@@ -30,21 +29,6 @@
             </field>
         </field>
     </record>
-    <!-- <record id="product_product_view_form" model="ir.ui.view">
-        <field name="name">product.product.view.form.inherit.unique_code</field>
-        <field name="model">product.product</field>
-        <field name="mode">primary</field>
-        <field eval="7" name="priority" />
-        <field name="inherit_id" ref="product.product_template_form_view" />
-        <field name="arch" type="xml">
-            <xpath expr="//div[@class='oe_title']" position="after">
-                <h2>
-                <label for="unique_code" string="Product No." />&#x2063;
-                <field name="unique_code" decoration-bf="1" readonly="1" />
-                </h2>
-            </xpath>
-        </field>
-    </record> -->
     <record id="product_product_view_kanban" model="ir.ui.view">
         <field name="name">product.product.view.form.inherit.unique_code</field>
         <field name="model">product.product</field>
