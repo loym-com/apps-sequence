@@ -9,6 +9,7 @@
                 <field
                     name="sequence_choice_field_id"
                     options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
+                    invisible="not unique_code_field_exists"
                 />
             </field>
         </field>

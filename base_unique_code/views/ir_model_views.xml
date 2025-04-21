@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
             <field name="display_name_pattern" position="after">
-                <field name="unique_code_pattern" placeholder="{id:>05}"/>
-                <field name="unique_code_sequence_id"/>
+                <field name="unique_code_pattern" placeholder="{id:>05}" invisible="not unique_code_field_exists"/>
+                <field name="unique_code_sequence_id" invisible="not unique_code_field_exists"/>
             </field>
         </field>
     </record>

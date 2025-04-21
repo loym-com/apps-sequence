@@ -15,6 +15,6 @@
     ],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",
-    "version": "18.0.3.0.0",
+    "version": "18.0.3.0.1",
     "website": "https://www.loym.com",
 }
