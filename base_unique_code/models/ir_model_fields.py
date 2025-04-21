@@ -10,5 +10,8 @@ class IrModelFields(models.Model):
             if record.name == "unique_code":
                 # if "unique_code" in record.model_id.unique_code_pattern:
                 #     record.model_id.display_code_pattern = ""
-                if "unique_code" in record.model_id.display_name_pattern:
-                    record.model_id.display_name_pattern = ""
+                try:
+                    if "unique_code" in record.model_id.display_name_pattern:
+                        record.model_id.display_name_pattern = ""
+                except:
+                    pass
