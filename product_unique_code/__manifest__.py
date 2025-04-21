@@ -10,12 +10,14 @@
     "license": "LGPL-3",
     "category": "Product",
     "depends": [
+        "account", # res.config.settings
         "base_unique_code",
         "product",
     ],
     "data": [
         "views/product_product_views.xml",
         "views/product_template_views.xml",
+        "views/res_config_settings_views.xml",
     ],
     "installable": True,
 }

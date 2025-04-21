@@ -8,21 +8,39 @@
             <field name="arch" type="xml">
                 <xpath expr="//app[@name='project']" position="inside">
                     <div class="app_settings_block" data-string="Display" string="Display">
-                        <h2>Project Display</h2>
+                        <h2>Project and Task Display</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_project_project" invisible="1"/>
                                 <label for="project_project_display_name_pattern" string="Project Name Pattern"/>
-                                <div class="o_setting_right_pane">
-                                    <field name="project_project_display_name_pattern" class="w-100"/>
-                                </div>
+                                <field name="project_project_display_name_pattern" class="w-100"/>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_project_task" invisible="1"/>
                                 <label for="project_task_display_name_pattern" string="Task Name Pattern"/>
-                                <div class="o_setting_right_pane">
-                                    <field name="project_task_display_name_pattern" class="w-100"/>
-                                </div>
+                                <field name="project_task_display_name_pattern" class="w-100"/>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <field name="ir_model_project_project" invisible="1"/>
+                                <label for="project_project_unique_code_pattern" string="Project Number Pattern"/>
+                                <field name="project_project_unique_code_pattern" class="w-100"/>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <field name="ir_model_project_task" invisible="1"/>
+                                <label for="project_task_unique_code_pattern" string="Task Number Pattern"/>
+                                <field name="project_task_unique_code_pattern" class="w-100"/>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <field name="ir_model_project_project" invisible="1"/>
+                                <label for="project_project_unique_code_sequence_id" string="Project Sequence"/>
+                                <field name="project_project_unique_code_sequence_id" class="w-100"/>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <field name="ir_model_project_task" invisible="1"/>
+                                <label for="project_task_unique_code_sequence_id" string="Task Sequence"/>
+                                <field name="project_task_unique_code_sequence_id" class="w-100"/>
                             </div>
                         </div>
                     </div>
