@@ -18,7 +18,7 @@ class Base(models.AbstractModel):
         ),
     ]
 
-    unique_code = fields.Char(copy=False, index=True)
+    unique_code = fields.Char(copy=False, store=True, index=True)
 
     @api.model_create_multi
     def create(self, vals_list):
