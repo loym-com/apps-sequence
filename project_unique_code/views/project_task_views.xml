@@ -5,10 +5,12 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-            <field name="name" position="before">
-                <field name="unique_code" class="oe_inline" />
-                <span class="oe_inline"> - </span>
-            </field>
+            <h1 position="before">
+                <div class="d-flex h3">
+                    <!-- <label for="unique_code" string="No." /> -->
+                    <field name="unique_code" decoration-bf="1" readonly="1" />
+                </div>
+            </h1>
         </field>
     </record>
     <record id="project_task_view_tree" model="ir.ui.view">

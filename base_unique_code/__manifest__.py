@@ -1,9 +1,9 @@
 # Copyright 2025 Loym
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": "Sequences",
-    "summary": "Each record may have a sequence code",
+    "name": "Base Unique Code",
+    "summary": "Each record may have a unique code",
     "author": "Loym",
     "data": [
         "views/ir_model_views.xml",
@@ -15,6 +15,6 @@
     ],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",
-    "version": "18.0.2.0.1",
+    "version": "18.0.2.0.2",
     "website": "https://www.loym.com",
 }

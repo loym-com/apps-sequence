@@ -4,7 +4,7 @@
 
 {
     "name": "Product Unique Code",
-    "version": "18.0.2.0.1",
+    "version": "18.0.2.0.2",
     "author": "Cetmix, Loym",
     "website": "https://www.loym.com",
     "license": "LGPL-3",
