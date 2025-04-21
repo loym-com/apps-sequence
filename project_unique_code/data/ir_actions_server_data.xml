@@ -1,8 +1,8 @@
 <odoo>
     <record id="project_project_action_set_unique_code" model="ir.actions.server">
         <field name="name">Set Unique No.</field>
-        <field name="model_id" ref="product.model_project_project"/>
-        <field name="binding_model_id" ref="product.model_project_project"/>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="binding_model_id" ref="project.model_project_project"/>
         <field name="state">code</field>
         <field name="code">
             <![CDATA[
@@ -13,8 +13,8 @@ records.set_unique_code_and_name()
     </record>
     <record id="project_task_action_set_unique_code" model="ir.actions.server">
         <field name="name">Set Unique No.</field>
-        <field name="model_id" ref="product.model_project_task"/>
-        <field name="binding_model_id" ref="product.model_project_task"/>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="binding_model_id" ref="project.model_project_task"/>
         <field name="state">code</field>
         <field name="code">
             <![CDATA[
