@@ -4,7 +4,7 @@
 
 {
     "name": "Product Unique Code",
-    "summary": "",
+    "summary": " ",
     "version": "18.0.3.0.15",
     "author": "Cetmix, Loym",
     "website": "https://www.loym.com",
