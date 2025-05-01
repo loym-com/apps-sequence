@@ -20,7 +20,7 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='display_name']" position="after">
+            <xpath expr="//field[@name='display_name']" position="before">
                 <field name="unique_code" optional="hide" />
             </xpath>
         </field>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//field[@name='display_name']" position="after">
+            <!-- <xpath expr="//field[@name='display_name']" position="after">
                 <field name="name" />
             </xpath>
             <xpath
@@ -53,7 +53,7 @@
                 <span>
                     <t t-esc="record.display_name.value" />
                 </span>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 </data>
