@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Sequence for projects and tasks",
+    "name": "Internal/External Projects",
     "summary": "",
     "author": "Loym",
     "data": [
@@ -12,6 +12,7 @@
         "project_unique_code",
     ],
     "license": "LGPL-3",
-    "version": "18.0.3.0.9",
+    "pre_init_hook": "pre_init_hook",
+    "version": "18.0.3.0.10",
     "website": "https://www.loym.com",
 }
