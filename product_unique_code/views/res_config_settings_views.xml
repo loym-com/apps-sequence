@@ -6,7 +6,7 @@
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="project.res_config_settings_view_form" />
             <field name="arch" type="xml">
-                <xpath expr="//app[@name='account']" position="inside">
+                <xpath expr="//app[@name='stock']" position="inside">
                     <div class="app_settings_block" data-string="Display" string="Display">
                         <h2>Product Template and Variant Display</h2>
                         <div class="row mt16 o_settings_container">
@@ -43,26 +43,26 @@
                                 <field
                                     name="product_template_unique_code_pattern"
                                     class="w-100"
-                                    placeholder="{_sequence_}"
+                                    placeholder="{id:0>5} or {_sequence_}"
                                     readonly="product_template_unique_code_from_variant"
                                 />
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <field name="ir_model_product_product" invisible="1"/>
-                                <label for="product_product_unique_code_pattern" string="Stored Unque Product Variant No. Pattern"/>
-                                <field
-                                    name="product_product_unique_code_pattern"
-                                    class="w-100"
-                                    placeholder="{_sequence_}"
-                                />
-                            </div>
-
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_template" invisible="1"/>
                                 <label for="product_template_unique_code_sequence_id" string="Product Template Sequence"/>
                                 <field
                                     name="product_template_unique_code_sequence_id"
                                     class="w-100"
+                                />
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <field name="ir_model_product_product" invisible="1"/>
+                                <label for="product_product_unique_code_pattern" string="Stored Unque Product Variant No. Pattern"/>
+                                <field
+                                    name="product_product_unique_code_pattern"
+                                    class="w-100"
+                                    placeholder="{id:0>5} or {_sequence_}"
                                 />
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">

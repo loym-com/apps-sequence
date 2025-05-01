@@ -9,7 +9,7 @@ class Base(models.AbstractModel):
         1) field_path is "__sequence__"
         2) ir.model has sequence_choice_field_id
         """
-        if field_path == "__sequence__":
+        if field_path in ("_sequence_", "__sequence__"):
             field = self._get_ir_model(prefetch_fields=False).sequence_choice_field_id
             if field:
                 choice_field = self.env["ir.model.fields"].browse(field.id)

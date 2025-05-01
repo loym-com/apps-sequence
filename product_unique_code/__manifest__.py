@@ -4,13 +4,13 @@
 
 {
     "name": "Product Unique Code",
-    "version": "18.0.3.0.12",
+    "version": "18.0.3.0.13",
     "author": "Cetmix, Loym",
     "website": "https://www.loym.com",
     "license": "LGPL-3",
     "category": "Product",
     "depends": [
-        "account", # res.config.settings
+        "stock", # res.config.settings
         "base_unique_code",
         "product",
     ],
