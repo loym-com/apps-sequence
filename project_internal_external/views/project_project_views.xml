@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Moduon Team S.L.
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0) -->
+<data>
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="name">project.project.view.form.unique_code</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <field name="date_start" position="after">
+                <field name="internal_external" optional="hide" />
+            </field>
+        </field>
+    </record>
+</data>
