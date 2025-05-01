@@ -34,7 +34,7 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_kanban_view" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='d-flex mb-1 h5']" position="before">
+            <xpath expr="//div[hasclass('d-flex', 'mb-1', 'h5')]" position="before">
                 <div class="d-flex mb-0 h3">
                     <field name="unique_code" string="Product No." decoration-bf="1" readonly="1" />
                 </div>
