@@ -82,13 +82,13 @@ class UniqueCodeMixin(models.AbstractModel):
         1) field_path is "__sequence__"
         2) ir.model has unique_code_sequence_id
         """
-        if field_path == "__sequence__" and is_none(item, "unique_code"):
+        if field_path in ("_sequence_", "__sequence__") and is_none(item, "unique_code"):
             sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
             if sequence:
                 return (sequence.next_by_id(), "char")
         return super()._get_display_value(item, field_path)
 
     def _is_valid_display_field_paths(self, field_paths):
-        """Do not check __sequence__."""
-        field_paths = [item for item in field_paths if item != "__sequence__"]
+        """Do not check _sequence_ or __sequence__."""
+        field_paths = [item for item in field_paths if item not in ("_sequence_", "__sequence__")]
         return super()._is_valid_display_field_paths(field_paths)
