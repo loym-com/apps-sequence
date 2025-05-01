@@ -10,6 +10,6 @@
     ],
     "depends": ["base_unique_code"],
     "license": "LGPL-3",
-    "version": "18.0.3.0.4",
+    "version": "18.0.3.0.5",
     "website": "https://www.loym.com",
 }
