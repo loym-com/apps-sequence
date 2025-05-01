@@ -18,7 +18,7 @@
                                     <b>sequence</b>: {_sequence_}
                                 </p>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <!-- <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_project_project" invisible="1"/>
                                 <label for="project_project_display_name_pattern" string="Computed Project Name Pattern"/>
                                 <field
@@ -35,7 +35,7 @@
                                     class="w-100"
                                     placeholder="{unique_code} - {name}"
                                 />
-                            </div>
+                            </div> -->
 
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_project_project" invisible="1"/>

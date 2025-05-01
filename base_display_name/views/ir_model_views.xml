@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
             <field name="modules" position="after">
-                <field name="display_name_pattern" placeholder="{id:>05} - {name}"/>
+                <field name="display_name_pattern" placeholder="{unique_code} {name}" readonly="1" />
             </field>
         </field>
     </record>

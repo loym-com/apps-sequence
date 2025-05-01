@@ -51,6 +51,11 @@ class TestProductUniqueCode(TransactionCase):
         - Archives the initial variant
         - Checks the template code updates to match the active variant
         """
+
+        self.env["ir.config_parameter"].sudo().set_param(
+            "product_unique_code.product_template_unique_code_from_variant", "True"
+        )
+
         # Create a product template
         template = self.product_template.create({"name": "Test Template"})
         # Check the related product

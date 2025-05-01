@@ -40,3 +40,10 @@ class IrModel(models.Model):
     @api.constrains("unique_code_pattern")
     def _check_unique_code_field_paths(self):
         return self._check_display_field_paths("unique_code_pattern")
+
+    @api.onchange("unique_code_pattern")
+    def _onchange_unique_code_pattern(self):
+        if self.unique_code_pattern:
+            self.display_name_pattern = "{unique_code} {name}"
+        else:
+            self.display_name_pattern = False

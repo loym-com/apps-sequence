@@ -6,6 +6,7 @@
     "summary": "Each record may have a unique code",
     "author": "Loym",
     "data": [
+        "data/ir_actions_server_data.xml",
         "views/ir_model_views.xml",
     ],
     "depends": [

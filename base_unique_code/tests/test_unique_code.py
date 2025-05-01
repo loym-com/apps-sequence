@@ -36,21 +36,6 @@ class TestUniqueCode(TransactionCase):
         self.assertEqual(record.unique_code, False)
         self.assertEqual(record.name, "Test Partner")
 
-    def test_1_set_action_set_unique_code_and_name(self):
-        ServerAction = self.env["ir.actions.server"]
-        domain = [
-            ("model_id", "=", self.model.id),
-            ("binding_model_id", "=", self.model.id),
-            ("usage", "=", "ir_actions_server"),
-            ("state", "=", "code"),
-            ("code", "=", "records.set_unique_code_and_name()"),
-        ]
-        action = ServerAction.search(domain)
-        self.assertTrue(action)
-        self.model.unique_code_pattern = ""
-        action = ServerAction.search(domain)
-        self.assertFalse(action)
-
     def test_1_secuence(self):
         record = self.env[self.model.model].create({"name": "Test Partner"})
         self.assertEqual(record.unique_code, "partner-00001")

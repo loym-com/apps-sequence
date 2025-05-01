@@ -18,7 +18,7 @@
                                     <b>sequence</b>: {_sequence_}
                                 </p>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <!-- <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_crm_lead" invisible="1"/>
                                 <label
                                     for="crm_lead_display_name_pattern"
@@ -29,7 +29,7 @@
                                     class="w-100"
                                     placeholder="{unique_code} - {name}"
                                 />
-                            </div>
+                            </div> -->
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_crm_lead" invisible="1"/>
                                 <label
