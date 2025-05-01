@@ -53,6 +53,7 @@
                                 <field
                                     name="product_template_unique_code_sequence_id"
                                     class="w-100"
+                                    readonly="product_template_unique_code_from_variant"
                                 />
                             </div>
 
@@ -77,7 +78,7 @@
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <label for="product_template_unique_code_from_variant" string="Get Product Template No. From Variant"/>
                                 <div class="o_setting_left_pane">
-                                    <field name="product_template_unique_code_from_variant" class="w-100" readonly="product_template_unique_code_pattern"/>
+                                    <field name="product_template_unique_code_from_variant" class="w-100" readonly="product_template_unique_code_pattern or ir_model_product_template"/>
                                 </div>
                             </div>
                         </div>
