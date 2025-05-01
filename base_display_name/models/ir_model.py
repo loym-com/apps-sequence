@@ -13,7 +13,7 @@ class IrModel(models.Model):
     _inherit = "ir.model"
 
     display_name_pattern = fields.Char(
-        string="Display Name",
+        string="Name Pattern",
         help=(
             "Example: '{parent_id.display_code}/{display_code} - {name}'\n"
             "Use python string format syntax.\n\n"

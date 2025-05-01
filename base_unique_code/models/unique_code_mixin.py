@@ -20,7 +20,7 @@ class UniqueCodeMixin(models.AbstractModel):
     ]
 
     unique_code = fields.Char(
-        string="Unique No.",
+        string="No.",
         copy=False,
         index=True,
         store=True,
