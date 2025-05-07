@@ -24,7 +24,7 @@ class ProjectProject(models.Model):
                 elif self.internal_external == "external":
                     self.unique_code = "Pe" + self.unique_code
 
-    @api.constrains("unique_code")
+    @api.constrains("unique_code", "name")
     def _constrains_unique_code(self):
         for record in self:
             record.alias_name = record.unique_code
