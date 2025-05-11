@@ -11,6 +11,7 @@
     "depends": [
         "project_unique_code",
     ],
+    "excludes": ["sequence_choice"],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",
     "version": "18.0.3.0.17",
