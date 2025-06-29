@@ -4,7 +4,7 @@
         <record id="res_config_settings_view_form_product_display" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.product_display</field>
             <field name="model">res.config.settings</field>
-            <field name="inherit_id" ref="project.res_config_settings_view_form" />
+            <field name="inherit_id" ref="stock.res_config_settings_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//app[@name='stock']" position="inside">
                     <div class="app_settings_block" data-string="Display" string="Display">
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <field name="ir_model_product_product" invisible="1"/>
-                                <label for="product_product_unique_code_sequence_id" string="Producct Variant Sequence"/>
+                                <label for="product_product_unique_code_sequence_id" string="Product Variant Sequence"/>
                                 <field
                                     name="product_product_unique_code_sequence_id"
                                     class="w-100"
@@ -78,7 +78,8 @@
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <label for="product_template_unique_code_from_variant" string="Get Product Template No. From Variant"/>
                                 <div class="o_setting_left_pane">
-                                    <field name="product_template_unique_code_from_variant" class="w-100" readonly="product_template_unique_code_pattern or ir_model_product_template"/>
+                                    <!-- <field name="product_template_unique_code_from_variant" class="w-100" readonly="product_template_unique_code_pattern or ir_model_product_template"/> -->
+                                    <field name="product_template_unique_code_from_variant" class="w-100"/>
                                 </div>
                             </div>
                         </div>

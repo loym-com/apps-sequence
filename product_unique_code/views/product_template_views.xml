@@ -43,6 +43,9 @@
                     <field name="unique_code" decoration-bf="1" readonly="1" />
                 </div>
             </h1>
+            <field name="type" position="after">
+                <field name="main_variant_id" string="Main Variant"/>
+            </field>
         </field>
     </record>
     <record id="product_template_view_kanban" model="ir.ui.view">

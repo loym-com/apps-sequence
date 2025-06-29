@@ -14,15 +14,25 @@ class ProductTemplate(models.Model):
         compute="_compute_unique_code",
         store=True,
     )
+    main_variant_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Main Variant",
+        # group="stock.group_stock_manager",
+        help="The main variant of the product template. "
+             "This is used to determine the unique code for the product template. "
+             "Only STOCK MANAGER can change this value.",
+    )
 
-    @api.depends("product_variant_ids.unique_code", "product_variant_ids.active")
+    @api.depends(
+        "product_variant_ids.unique_code",
+        "product_variant_ids.active",
+        "main_variant_id",
+    )
     def _compute_unique_code(self):
         """Get active product variant unique_code."""
         param_name = 'product_unique_code.product_template_unique_code_from_variant'
         param = self.env['ir.config_parameter'].sudo().get_param(param_name)
         if param:
             for template in self:
-                product = template.product_variant_ids.filtered(lambda p: p.active)
-                if product:
-                    product = fields.first(product)
-                    template.unique_code = product.unique_code
+                if template.main_variant_id:
+                    template.unique_code = template.main_variant_id.unique_code
