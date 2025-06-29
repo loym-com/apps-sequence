@@ -44,7 +44,7 @@
                 </div>
             </h1>
             <field name="type" position="after">
-                <field name="main_variant_id" string="Main Variant"/>
+                <field name="main_variant_id" string="Main Variant" domain="[('product_tmpl_id', '=', id)]"/>
             </field>
         </field>
     </record>
