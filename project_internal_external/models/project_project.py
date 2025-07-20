@@ -6,7 +6,7 @@ class ProjectProject(models.Model):
 
     internal_external = fields.Selection(
         string="Internal/External",
-        selection=[("i", "Internal"), ("e", "External"), ("internal", "Internal (deprecated)"), ("external", "External (deprecated)")]
+        selection=[("i", "Internal"), ("e", "External")]
     )
 
     # # TODO: Lookup the sequence to get the prefix

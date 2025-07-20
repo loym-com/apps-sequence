@@ -9,8 +9,9 @@
     "depends": [
         "project_internal_external",
         "project_unique_code",
+        "sequence_choice",
     ],
     "license": "LGPL-3",
-    "version": "18.0.3.0.19",
+    "version": "18.0.3.0.20",
     "website": "https://www.fiq.no",
 }
