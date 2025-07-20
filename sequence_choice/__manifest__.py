@@ -9,9 +9,7 @@
         "views/ir_model_views.xml",
     ],
     "depends": ["base_unique_code"],
-    "excludes": ["project_internal_external"],
     "license": "LGPL-3",
-    "pre_init_hook": "pre_init_hook",
     "version": "18.0.3.0.18",
     "website": "https://www.loym.com",
 }
