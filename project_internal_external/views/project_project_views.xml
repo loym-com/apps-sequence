@@ -9,10 +9,13 @@
         <field name="arch" type="xml">
             <data>
                 <field name="date_start" position="after">
-                    <field name="internal_external" attrs="{'readonly': [('groups_id', 'not in', [ref('project.group_project_manager')])]}"/>
+                    <field name="internal_external" groups="project.group_project_manager"/>
+                    <field name="internal_external" groups="!project.group_project_manager" readonly="1"/>
                 </field>
-                <field name="unique_code" position="attributes">
-                    <attribute name="attrs">{'readonly': [('groups_id', 'not in', [ref('project.group_project_manager')])]}</attribute>
+                <field name="unique_code" position="replace">
+                    <field name="unique_code" groups="project.group_project_manager"/>
+                    <field name="unique_code" groups="!project.group_project_manager" readonly="1"/>
+                </field>
             </data>
         </field>
     </record>

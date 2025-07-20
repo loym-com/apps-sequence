@@ -5,8 +5,8 @@ class ProjectProject(models.Model):
     _inherit = "project.project"
 
     internal_external = fields.Selection(
-        string="Pi Pe",
-        selection=[("internal", "Internal"), ("external", "External")]
+        string="Internal/External",
+        selection=[("i", "Internal"), ("e", "External"), ("internal", "Internal (deprecated)"), ("external", "External (deprecated)")]
     )
 
     # # TODO: Lookup the sequence to get the prefix
