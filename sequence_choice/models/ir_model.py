@@ -14,7 +14,7 @@ class IrModel(models.Model):
     sequence_choice_field_id = fields.Many2one(
         string="Choose sequence by",
         comodel_name="ir.model.fields",
-        domain="[('id', 'in', field_id), ('ttype', 'in', ['boolean', 'selection'])]",
+        domain="[('id', 'in', field_id), ('ttype', 'in', ['boolean', 'selection', 'many2one'])]",
         help="If this field is empty, "
             "all records will get a sequence code from the same sequence.\n"
             "If this field is set, "
@@ -37,9 +37,9 @@ class IrModel(models.Model):
             field = self.sequence_choice_field_id
             if field.ttype == "boolean":
                 values = ["True", "False"]
-            # elif field.ttype == "many2one":
-            #     values = self.env[field.relation].search([]).mapped("id")
-            #     values = [str(value) for value in values]
+            elif field.ttype == "many2one":
+                values = self.env[field.relation].search([]).mapped("id")
+                values = [str(value) for value in values]
             elif field.ttype == "selection":
                 values = field.selection_ids.mapped("value")
             else:
@@ -49,9 +49,13 @@ class IrModel(models.Model):
                 code = f"{self.model}.{field.name}.{value}"
                 sequence = Sequence.search([("code", "=", code)])
                 if not sequence:
+                    if field.ttype == "many2one":
+                        name = self.env[field.relation].browse(int(value)).display_name
+                    else:
+                        name = code
                     Sequence.create(
                         {
-                            "name": code,
+                            "name": name,
                             "code": code,
                             "prefix": f"{value}-",
                             "padding": 5,

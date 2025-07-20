@@ -14,8 +14,8 @@ class Base(models.AbstractModel):
             if field:
                 choice_field = self.env["ir.model.fields"].browse(field.id)
                 choice_value = item[choice_field.name]
-                # if choice_field.ttype == "many2one":
-                #     choice_value = choice_value.id
+                if choice_field.ttype == "many2one":
+                    choice_value = choice_value.id
                 choice_value = str(choice_value)
                 code = f"{choice_field.model}.{choice_field.name}.{choice_value}"
                 return (self.env["ir.sequence"].next_by_code(code), "char")
