@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Copyright 2023 Moduon Team S.L.
-     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0) -->
 <data>
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.view.form.internal_external</field>
@@ -9,12 +7,10 @@
         <field name="arch" type="xml">
             <data>
                 <field name="date_start" position="after">
-                    <field name="internal_external" groups="project.group_project_manager"/>
-                    <field name="internal_external" groups="!project.group_project_manager" readonly="1"/>
+                    <field name="internal_external" readonly="[('id', '!=', False)]"/>
                 </field>
                 <field name="unique_code" position="replace">
-                    <field name="unique_code" groups="project.group_project_manager"/>
-                    <field name="unique_code" groups="!project.group_project_manager" readonly="1"/>
+                    <field name="unique_code" readonly="1"/>
                 </field>
             </data>
         </field>
