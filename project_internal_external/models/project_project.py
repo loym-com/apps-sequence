@@ -11,4 +11,5 @@ class ProjectProject(models.Model):
 
     @api.constrains("company_id", "internal_external")
     def set_sequence_code_unique_code_and_name(self):
+        self.unique_code = ""
         super().set_sequence_code_unique_code_and_name()
