@@ -9,18 +9,6 @@ class ProjectProject(models.Model):
         selection=[("i", "Internal"), ("e", "External")]
     )
 
-    # # TODO: Lookup the sequence to get the prefix
-    # @api.constrains("internal_external")
-    # def _onchange_internal_external(self):
-    #     if self.unique_code:
-    #         prefix = self.unique_code[:2] if self.unique_code[:2] in ("Pi", "Pe") else None
-    #         if prefix:
-    #             if self.internal_external == "internal":
-    #                 self.unique_code = "Pi" + self.unique_code[2:]
-    #             elif self.internal_external == "external":
-    #                 self.unique_code = "Pe" + self.unique_code[2:]
-    #         else:
-    #             if self.internal_external == "internal":
-    #                 self.unique_code = "Pi" + self.unique_code
-    #             elif self.internal_external == "external":
-    #                 self.unique_code = "Pe" + self.unique_code
+    @api.constrains("company_id", "internal_external")
+    def set_sequence_code_unique_code_and_name(self):
+        super().set_sequence_code_unique_code_and_name()

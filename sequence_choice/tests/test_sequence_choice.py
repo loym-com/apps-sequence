@@ -32,7 +32,7 @@ class TestSequence(TransactionCase):
         self.assertEqual(record.unique_code, "False-00001")
         record.unique_code = ""
         self.assertEqual(record.unique_code, "")
-        record.set_unique_code_and_name()
+        record.set_sequence_code_unique_code_and_name()
         self.assertEqual(record.unique_code, "False-00002")
 
     # def test_choice_many2one(self):
@@ -45,7 +45,7 @@ class TestSequence(TransactionCase):
     #     self.assertEqual(record.ref, f"{title.id}-00001")
     #     record.ref = ""
     #     self.assertEqual(record.ref, "")
-    #     record.set_unique_code_and_name()
+    #     record.set_sequence_code_unique_code_and_name()
     #     self.assertEqual(record.ref, f"{title.id}-00002")
 
     def test_choice_selection(self):
@@ -58,7 +58,7 @@ class TestSequence(TransactionCase):
         self.assertEqual(record.unique_code, "ltr-00001")
         record.unique_code = ""
         self.assertEqual(record.unique_code, "")
-        record.set_unique_code_and_name()
+        record.set_sequence_code_unique_code_and_name()
         self.assertEqual(record.unique_code, "ltr-00002")
 
 

@@ -5,7 +5,7 @@ class ProjectProject(models.Model):
     _inherit = "project.project"
 
     @api.constrains("unique_code", "name")
-    def _constrains_unique_code_or_name(self):
+    def _set_alias_name_and_documents_folder_name(self):
         for record in self:
             # Set alias name
             record.alias_name = record.unique_code

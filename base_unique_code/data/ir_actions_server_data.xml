@@ -7,7 +7,7 @@
         <field name="code">
             <![CDATA[
 records = records.sorted(key=lambda r: r.id)
-records.set_unique_code_and_name()
+records.set_sequence_code_unique_code_and_name()
             ]]>
         </field>
     </record>

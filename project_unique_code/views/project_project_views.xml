@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="project.view_project" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
-                <field name="unique_code" optional="hide" />
+                <field name="unique_code" readonly="1" optional="hide" />
             </xpath>
         </field>
     </record>

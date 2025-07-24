@@ -19,6 +19,12 @@ class UniqueCodeMixin(models.AbstractModel):
         ),
     ]
 
+    sequence_code = fields.Char(
+        string="Sequence No.",
+        copy=False,
+        store=True,
+    )
+
     unique_code = fields.Char(
         string="No.",
         copy=False,
@@ -34,23 +40,36 @@ class UniqueCodeMixin(models.AbstractModel):
         # Create first, so we can use the record "id" etc. in the pattern
         records_ok = super().create(vals_list_ok)
         records_todo = super().create(vals_list_todo)
-        records_todo.set_unique_code_and_name()
+        records_todo.set_sequence_code_unique_code_and_name()
         return records_ok | records_todo
 
     def write(self, vals):
         super().write(vals)
         self._set_name_if_empty()
 
-    def set_unique_code_and_name(self, vals_list=None):
+    def set_sequence_code_unique_code_and_name(self, vals_list=None):
+        vals_list = self._set_sequence_code(vals_list)
         vals_list = self._set_unique_code(vals_list)
         vals_list = self._set_name_if_empty(vals_list)
+        return vals_list
+
+    def _set_sequence_code(self, vals_list=None):
+        """Set sequence_code based on the ir.model's unique_code_sequence_id."""
+        if not self._get_ir_model().unique_code_sequence_id:
+            return vals_list
+
+        for item in vals_list or self:
+            if is_none(item, "sequence_code"):
+                sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
+                if sequence:
+                    set_value(item, "sequence_code", sequence.next_by_id())
         return vals_list
 
     def _set_unique_code(self, vals_list=None):
         return self._set_field_from_pattern(
             "unique_code", "unique_code_pattern", vals_list
         )
-    
+
     def _set_name_if_empty(self, vals_list=None):
         """Set name = unique_code if removing name or no existing name
 
@@ -74,21 +93,3 @@ class UniqueCodeMixin(models.AbstractModel):
             if get_value(item, "unique_code") and not get_value(item, "name"):
                 set_value(item, "name", item["unique_code"])
         return vals_list
-
-    # Override methods in base_display_name, to handle __sequence__.
-
-    def _get_display_value(self, item, field_path):
-        """Use sequence if:
-        1) field_path is "__sequence__"
-        2) ir.model has unique_code_sequence_id
-        """
-        if field_path in ("_sequence_", "__sequence__") and is_none(item, "unique_code"):
-            sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
-            if sequence:
-                return (sequence.next_by_id(), "char")
-        return super()._get_display_value(item, field_path)
-
-    def _is_valid_display_field_paths(self, field_paths):
-        """Do not check _sequence_ or __sequence__."""
-        field_paths = [item for item in field_paths if item not in ("_sequence_", "__sequence__")]
-        return super()._is_valid_display_field_paths(field_paths)

@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <data>
                 <field name="date_start" position="after">
-                    <field name="internal_external" readonly="[('id', '!=', False)]"/>
+                    <field name="internal_external" required="1"/>
                 </field>
-                <field name="unique_code" position="replace">
-                    <field name="unique_code" readonly="1"/>
-                </field>
+                <xpath expr="sheet/group/group/field[@name='company_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
             </data>
         </field>
     </record>

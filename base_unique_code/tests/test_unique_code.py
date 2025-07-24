@@ -41,13 +41,13 @@ class TestUniqueCode(TransactionCase):
         self.assertEqual(record.unique_code, "partner-00001")
         record.unique_code = ""
         self.assertEqual(record.unique_code, "")
-        record.set_unique_code_and_name()
+        record.set_sequence_code_unique_code_and_name()
         self.assertEqual(record.unique_code, "partner-00002")
 
     def test_no_change_of_existing_sequence_code(self):
         record = self.env[self.model.model].create({"name": "Test Partner"})
         self.assertEqual(record.unique_code, "partner-00001")
-        record.set_unique_code_and_name()
+        record.set_sequence_code_unique_code_and_name()
         self.assertEqual(record.unique_code, "partner-00001")
 
     def test_no_name_get_next_sequence_code(self):
