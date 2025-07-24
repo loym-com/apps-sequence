@@ -12,6 +12,6 @@
         "sequence_choice",
     ],
     "license": "LGPL-3",
-    "version": "18.0.3.0.20",
+    "version": "18.0.3.0.21",
     "website": "https://www.fiq.no",
 }

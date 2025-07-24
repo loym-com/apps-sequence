@@ -11,6 +11,6 @@
     "depends": ["base_setup"],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",
-    "version": "18.0.3.0.20",
+    "version": "18.0.3.0.21",
     "website": "https://www.loym.com",
 }
