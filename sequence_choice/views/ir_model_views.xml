@@ -5,13 +5,18 @@
         <field name="model">ir.model</field>
         <field name="inherit_id" ref="base.view_model_form" />
         <field name="arch" type="xml">
-            <field name="unique_code_sequence_id" position="after">
-                <field
-                    name="sequence_choice_field_id"
-                    options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
-                    invisible="not unique_code_field_exists"
-                />
-            </field>
+            <data>
+                <field name="unique_code_sequence_id" position="attributes">
+                    <attribute name="invisible">sequence_choice_field_id</attribute>
+                </field>
+                <field name="unique_code_sequence_id" position="after">
+                    <field
+                        name="sequence_choice_field_id"
+                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"
+                        invisible="unique_code_sequence_id"
+                    />
+                </field>
+            </data>
         </field>
     </record>
 </odoo>
