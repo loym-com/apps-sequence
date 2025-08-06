@@ -6,7 +6,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools.translate import _
 
-from odoo.addons.base_display_name.tools import get_value, is_none, set_value
+from odoo.addons.base_display_name.tools import get_value, is_none, set_value, get_indexed_pattern
 
 _logger = logging.getLogger(__name__)
 
@@ -33,32 +33,17 @@ class Base(models.AbstractModel):
     @api.depends(lambda self: self._get_display_field_paths("display_name_pattern"))
     def _compute_display_name(self):
         super()._compute_display_name()
-        self._set_field_from_pattern("display_name", "display_name_pattern")
+        self._set_field_from_pattern_fname("display_name", "display_name_pattern")
 
     # low-level
 
-    def _set_field_from_pattern(self, display_fname, pattern_fname, vals_list=None):
+    def _set_field_from_pattern_fname(self, display_fname, pattern_fname, vals_list=None):
         """
         Set a field (e.g. "display_name" or "unique_code") based on a pattern.
         display_fname: The name of the display field to compute.
         pattern_fname: The name of the ir.model field with the pattern.
         vals_list: Records to create. Loop through vals_list or self.
         """
-
-        def get_indexed_pattern(pattern, field_paths):
-            """Replace field paths with their index.
-            Example: "{related_id.field} {name}" -> "{0} {1}"
-            """
-            def replace_path_with_index(match):
-                full_placeholder = match.group(0)
-                field_path = match.group(1)
-                format_spec = match.group(2) or ""
-                if field_path in field_paths:
-                    return f"{{{field_paths.index(field_path)}{format_spec}}}"
-                else:
-                    return full_placeholder
-            return re.sub(r"\{([\w.]+)(:[^}]*)?\}", replace_path_with_index, pattern)
-
         pattern = self._get_display_pattern(pattern_fname)
         field_paths = self._get_display_field_paths_from_pattern(pattern)
         if not field_paths:
@@ -70,30 +55,42 @@ class Base(models.AbstractModel):
             # Skip if value exists in stored field
             if self._fields[display_fname].store and not is_none(item, display_fname):
                 continue
-            # Collect values, and check for false values
-            vals = {}
-            name_vals = {}
-            false_value = False
-            for i, field_path in enumerate(field_paths):
-                value, value_type = self._get_display_value(item, field_path)
-                if not value and value_type != "boolean":
-                    false_value = True
-                    break
-                vals[i] = value
-                if field_path.endswith(".name") or field_path == "name":
-                    name_vals[i] = value
-            # Check if "name" values are unique
-            name_not_unique = False
-            for i, value in name_vals.items():
-                if value in {v for k, v in vals.items() if k != i}:
-                    name_not_unique = True
-                    break
-            # Conditions
-            if false_value or name_not_unique:
-                continue
-            # Set the display field value
-            set_value(item, display_fname, indexed_pattern.format(*vals.values()))
+            # Set value
+            value = self._get_value_from_indexed_pattern(display_fname, indexed_pattern, vals_list)
+            set_value(item, display_fname, value)
         return vals_list
+
+    def _get_value_from_indexed_pattern(self, item, field_paths, indexed_pattern):
+        """
+        Set a field (e.g. "display_name" or "unique_code") based on a pattern.
+        display_fname: The name of the display field to compute.
+        pattern: E.g. "{field1} {field2}"
+        vals_list: Records to create. Loop through vals_list or self.
+        """
+
+        # Collect values, and check for false values
+        vals = {}
+        name_vals = {}
+        false_value = False
+        for i, field_path in enumerate(field_paths):
+            value, value_type = self._get_display_value(item, field_path)
+            if not value and value_type != "boolean":
+                false_value = True
+                break
+            vals[i] = value
+            if field_path.endswith(".name") or field_path == "name":
+                name_vals[i] = value
+        # Check if "name" values are unique, or if another field has the same value
+        name_not_unique = False
+        for i, value in name_vals.items():
+            if value in {v for k, v in vals.items() if k != i}:
+                name_not_unique = True
+                break
+        # Conditions
+        if false_value or name_not_unique:
+            return
+        # Set the display field value
+        return indexed_pattern.format(*vals.values())
 
     def _get_display_field_paths(self, pattern_fname, validate=True):
         pattern = self._get_display_pattern(pattern_fname)

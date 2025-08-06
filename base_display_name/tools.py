@@ -1,3 +1,5 @@
+import re
+
 from odoo import models
 
 def get_value(item, field):
@@ -34,3 +36,17 @@ def set_value(item, field, value):
         setattr(item, field, value)
     else:
         raise ValueError(f"Invalid type: {type(item)}")
+
+def get_indexed_pattern(pattern, field_paths):
+    """Replace field paths with their index.
+    Example: "{related_id.field} {name}" -> "{0} {1}"
+    """
+    def replace_path_with_index(match):
+        full_placeholder = match.group(0)
+        field_path = match.group(1)
+        format_spec = match.group(2) or ""
+        if field_path in field_paths:
+            return f"{{{field_paths.index(field_path)}{format_spec}}}"
+        else:
+            return full_placeholder
+    return re.sub(r"\{([\w.]+)(:[^}]*)?\}", replace_path_with_index, pattern)

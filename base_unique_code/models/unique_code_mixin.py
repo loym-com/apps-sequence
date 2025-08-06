@@ -66,7 +66,7 @@ class UniqueCodeMixin(models.AbstractModel):
         return vals_list
 
     def _set_unique_code(self, vals_list=None):
-        return self._set_field_from_pattern(
+        return self._set_field_from_pattern_fname(
             "unique_code", "unique_code_pattern", vals_list
         )
 
