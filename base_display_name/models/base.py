@@ -56,16 +56,17 @@ class Base(models.AbstractModel):
             if self._fields[display_fname].store and not is_none(item, display_fname):
                 continue
             # Set value
-            value = self._get_value_from_indexed_pattern(display_fname, indexed_pattern, vals_list)
-            set_value(item, display_fname, value)
+            value = self._get_value_from_indexed_pattern(item, field_paths, indexed_pattern)
+            if value:
+                set_value(item, display_fname, value)
         return vals_list
 
     def _get_value_from_indexed_pattern(self, item, field_paths, indexed_pattern):
         """
-        Set a field (e.g. "display_name" or "unique_code") based on a pattern.
-        display_fname: The name of the display field to compute.
+        Set a field (e.g. "display_name" or "unique_code") based on an pattern.
         pattern: E.g. "{field1} {field2}"
-        vals_list: Records to create. Loop through vals_list or self.
+        field_paths: E.g. ('field1', 'field2')
+        indexed_pattern: E.g. "{0} {1}"
         """
 
         # Collect values, and check for false values
