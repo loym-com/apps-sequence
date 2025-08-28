@@ -11,8 +11,9 @@ from odoo.addons.base_display_name.tools import get_value, is_none, set_value, g
 _logger = logging.getLogger(__name__)
 
 
-class Base(models.AbstractModel):
-    _inherit = "base"
+class DisplayNameMixin(models.AbstractModel):
+    _name = "display.name.mixin"
+    _description = "display.name.mixin"
 
     # display_name
 

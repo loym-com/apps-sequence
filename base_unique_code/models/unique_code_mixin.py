@@ -11,6 +11,7 @@ from odoo.addons.base_display_name.tools import get_value, is_none, set_value
 class UniqueCodeMixin(models.AbstractModel):
     _name = "unique.code.mixin"
     _description = "Unique Code Mixin"
+    _inherit = "display.name.mixin"
     _sql_constraints = [
         (
             "unique_unique_code",
