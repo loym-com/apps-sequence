@@ -8,6 +8,7 @@
     "data": [
         "data/ir_actions_server_data.xml",
         "views/ir_model_views.xml",
+        "views/res_partner_views.xml",
     ],
     "depends": [
         "base_display_name",
@@ -16,6 +17,6 @@
     ],
     "license": "LGPL-3",
     "pre_init_hook": "pre_init_hook",
-    "version": "18.0.4.0.3",
+    "version": "18.0.4.0.4",
     "website": "https://www.loym.com",
 }
