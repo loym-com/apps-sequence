@@ -34,19 +34,20 @@ class DisplayNameMixin(models.AbstractModel):
     @api.depends(lambda self: self._get_display_field_paths("display_name_pattern"))
     def _compute_display_name(self):
         super()._compute_display_name()
-        self._set_field_from_pattern_fname("display_name", "display_name_pattern")
+        self._set_field_from_pattern_name("display_name", "display_name_pattern")
 
     # low-level
 
-    def _set_field_from_pattern_fname(self, display_fname, pattern_fname, vals_list=None):
+    def _set_field_from_pattern_name(self, display_fname, pattern_name, vals_list=None, source="ir.model"):
         """
         Set a field (e.g. "display_name" or "unique_code") based on a pattern.
         display_fname: The name of the display field to compute.
-        pattern_fname: The name of the ir.model field with the pattern.
+        pattern_name: The name of the ir.model field or ir.config_parameter key with the pattern.
         vals_list: Records to create. Loop through vals_list or self.
+        source: "ir.model" or "ir.config_parameter"
         """
-        pattern = self._get_display_pattern(pattern_fname)
-        field_paths = self._get_display_field_paths_from_pattern(pattern)
+        pattern = self._get_display_pattern(pattern_name, source=source)
+        field_paths = self._get_display_field_paths_from_string(pattern)
         if not field_paths:
             return vals_list
         indexed_pattern = get_indexed_pattern(pattern, field_paths)
@@ -94,13 +95,24 @@ class DisplayNameMixin(models.AbstractModel):
         # Set the display field value
         return indexed_pattern.format(*vals.values())
 
-    def _get_display_field_paths(self, pattern_fname, validate=True):
-        pattern = self._get_display_pattern(pattern_fname)
-        return self._get_display_field_paths_from_pattern(pattern, validate)
+    def _get_display_field_paths(self, pattern_name, validate=True):
+        pattern = self._get_display_pattern(pattern_name)
+        return self._get_display_field_paths_from_string(pattern, validate)
 
-    def _get_display_field_paths_from_pattern(self, pattern, validate=True):
-        regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
-        field_paths = [match.group(1) for match in re.finditer(regexp, pattern)]
+    def _get_display_field_paths_from_string(self, fields_input, validate=True):
+        """fields_input: Either a pattern string with placeholders,
+        e.g. "{field1} {field2}", or a comma-separated string, e.g. "field1, field2".
+        return: tuple of field paths, e.g. ('field1', 'field2')
+        """
+        if "{" in fields_input and "}" in fields_input:
+            # Treat as pattern string with placeholders
+            # Regex from your pattern function: {field[:!format]}
+            regexp = r"\{([\w.]+)(?:[:!][^}]*)?\}"
+            field_paths = [m.group(1) for m in re.finditer(regexp, fields_input)]
+        else:
+            # Treat as comma-separated list
+            field_paths = [part.strip() for part in fields_input.split(",") if part.strip()]
+
         if not validate:
             return tuple(field_paths)
         elif self._is_valid_display_field_paths(field_paths):
@@ -118,20 +130,18 @@ class DisplayNameMixin(models.AbstractModel):
         else:
             return True
 
-    def _get_display_pattern(self, pattern_fname):
-        """pattern_fname: The name of the ir.model field with the pattern."""
-        # if self._name == "ir.model":
-        #     return ""
+    def _get_display_pattern(self, pattern_name, source="ir.model"):
+        """pattern_name: The name of the ir.model field or ir.config_parameter key
+        with the pattern."""
 
         # To install apps without errors:
         # - Do not prefetch fields.
-        model = self._get_ir_model(prefetch_fields=False)
-        return getattr(model, pattern_fname) or ""
-        # model_pattern = model._get_display_value(model, pattern_fname)
-        # if model_pattern and model_pattern[0]:
-        #     return model_pattern[0] or ""
-        # else:
-        #     return ""
+        if source == "ir.model":
+            model = self._get_ir_model(prefetch_fields=False)
+            return getattr(model, pattern_name) or ""
+        elif source == "ir.config_parameter":
+            param = self.env["ir.config_parameter"].sudo().get_param(pattern_name)
+            return param or ""
 
     def _get_ir_model(self, prefetch_fields=True):
         IrModel = self.env["ir.model"].sudo()

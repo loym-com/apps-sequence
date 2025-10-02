@@ -48,7 +48,7 @@ class UniqueCodeMixin(models.AbstractModel):
         super().write(vals)
         self._set_name_if_empty()
 
-    def set_sequence_code_unique_code_and_name(self, vals_list=None):
+    def set_sequence_code_unique_code_and_name(self, vals_list={}):
         vals_list = self._set_sequence_code(vals_list)
         vals_list = self._set_unique_code(vals_list)
         vals_list = self._set_name_if_empty(vals_list)
@@ -67,7 +67,7 @@ class UniqueCodeMixin(models.AbstractModel):
         return vals_list
 
     def _set_unique_code(self, vals_list=None):
-        return self._set_field_from_pattern_fname(
+        return self._set_field_from_pattern_name(
             "unique_code", "unique_code_pattern", vals_list
         )
 
