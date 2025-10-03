@@ -7,11 +7,11 @@ from odoo.addons.base_display_name.tools import get_value, is_none, set_value
 class UniqueCodeMixin(models.AbstractModel):
     _inherit = "unique.code.mixin"
 
-    def _set_sequence_code(self, vals_list=None):
+    def _set_sequence_code(self):
         """Set sequence_code based on the ir.model's sequence_choice_field_id."""
         choice_field = self._get_ir_model(prefetch_fields=False).sequence_choice_field_id
         if choice_field:
-            for item in vals_list or self:
+            for item in self:
                 if is_none(item, "sequence_code"):
                     choice_value = item[choice_field.name]
                     if choice_field.ttype == "many2one":
@@ -33,6 +33,6 @@ class UniqueCodeMixin(models.AbstractModel):
                              "- Set the field to the remembered value and save.\n"
                              "Then go to Sequences and configure the new sequence(s)."
                         )
-            return vals_list
+            return
         else:
-            return super()._set_sequence_code(vals_list)
+            return super()._set_sequence_code()

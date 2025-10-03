@@ -48,30 +48,28 @@ class UniqueCodeMixin(models.AbstractModel):
         super().write(vals)
         self._set_name_if_empty()
 
-    def set_sequence_code_unique_code_and_name(self, vals_list={}):
-        vals_list = self._set_sequence_code(vals_list)
-        vals_list = self._set_unique_code(vals_list)
-        vals_list = self._set_name_if_empty(vals_list)
-        return vals_list
+    def set_sequence_code_unique_code_and_name(self):
+        self._set_sequence_code()
+        self._set_unique_code()
+        self._set_name_if_empty()
 
-    def _set_sequence_code(self, vals_list=None):
+    def _set_sequence_code(self):
         """Set sequence_code based on the ir.model's unique_code_sequence_id."""
         if not self._get_ir_model().unique_code_sequence_id:
-            return vals_list
+            return
 
-        for item in vals_list or self:
+        for item in self:
             if is_none(item, "sequence_code"):
                 sequence = self._get_ir_model(prefetch_fields=False).unique_code_sequence_id
                 if sequence:
                     set_value(item, "sequence_code", sequence.next_by_id())
-        return vals_list
 
-    def _set_unique_code(self, vals_list=None):
+    def _set_unique_code(self):
         return self._set_field_from_pattern_name(
-            "unique_code", "unique_code_pattern", vals_list
+            "unique_code", "unique_code_pattern"
         )
 
-    def _set_name_if_empty(self, vals_list=None):
+    def _set_name_if_empty(self):
         """Set name = unique_code if removing name or no existing name
 
         Checking if the record has a name may affect the performance..."""
@@ -79,18 +77,17 @@ class UniqueCodeMixin(models.AbstractModel):
         # Relevant for uninstalling the module
         context = self.env.context
         if "prefetch_fields" in context and not context.get("prefetch_fields"):
-            return vals_list
+            return
 
         if "name" not in self._fields:
-            return vals_list
+            return
 
         model = self._get_ir_model()
         pattern = model.unique_code_pattern
         if not pattern:
-            return vals_list
+            return
 
         # Handle both create and write
-        for item in vals_list or self:
+        for item in self:
             if get_value(item, "unique_code") and not get_value(item, "name"):
                 set_value(item, "name", item["unique_code"])
-        return vals_list
