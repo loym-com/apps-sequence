@@ -4,7 +4,7 @@
 
 {
     "name": "CRM Unique Code",
-    "version": "18.0.4.0.2",
+    "version": "19.0.4.0.2",
     "author": "Loym",
     "website": "https://www.loym.com",
     "license": "LGPL-3",

@@ -55,7 +55,7 @@ repos:
       - id: oca-gen-addon-readme
         args:
           - --addons-dir=.
-          - --branch=18.0
+          - --branch=19.0
           - --org-name=OCA
           - --repo-name=mis-builder
           - --if-source-changed
