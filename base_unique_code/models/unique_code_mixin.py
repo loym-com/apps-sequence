@@ -5,8 +5,6 @@ import psycopg2
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
-from odoo.addons.base_display_name.tools import get_value, is_none, set_value
-
 
 class UniqueCodeMixin(models.AbstractModel):
     _name = "x.unique.code.mixin"

@@ -6,7 +6,6 @@
     "summary": "Unique code depends on a field",
     "author": "Loym",
     "data": [
-        "views/ir_model_views.xml",
     ],
     "depends": ["base_unique_code"],
     "license": "LGPL-3",
