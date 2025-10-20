@@ -1,14 +1,6 @@
 from odoo import models
 
-PROJECT_TASK_WRITABLE_FIELDS = {
-    "unique_code",
-}
-
 
 class ProjectTask(models.Model):
     _name = "project.task"
-    _inherit = ["project.task", "unique.code.mixin"]
-
-    @property
-    def SELF_WRITABLE_FIELDS(self):
-        return super().SELF_WRITABLE_FIELDS | PROJECT_TASK_WRITABLE_FIELDS
+    _inherit = ["project.task", "x.unique.code.mixin"]

@@ -1,1 +1,0 @@
-- [Henrik Norlin](https://www.loym.com/)

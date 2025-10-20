@@ -6,9 +6,6 @@
     "summary": "Each record may have a unique code",
     "author": "Loym",
     "data": [
-        "data/ir_actions_server_data.xml",
-        "views/ir_model_views.xml",
-        "views/res_partner_views.xml",
     ],
     "depends": [
         "base_display_name",
@@ -16,7 +13,6 @@
         "mail", # problem that the field "unique_code" exists everywhere
     ],
     "license": "LGPL-3",
-    "pre_init_hook": "pre_init_hook",
-    "version": "18.0.4.0.4",
+    "version": "18.0.5.0.0",
     "website": "https://www.loym.com",
 }

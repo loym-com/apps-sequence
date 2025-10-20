@@ -23,17 +23,3 @@ class IrModel(models.Model):
             "3. No other module will _compute_display_name()."
         ),
     )
-
-    @api.constrains("display_name_pattern")
-    def _check_display_name_field_paths(self):
-        return self._check_display_field_paths("display_name_pattern")
-
-    def _check_display_field_paths(self, field_name):
-        for model in self:
-            Model = self.env[model.model]
-            field_paths = Model._get_display_field_paths(field_name, validate=False)
-            if not Model._is_valid_display_field_paths(field_paths):
-                raise ValidationError(
-                    f"_check_display_name_field_paths: "
-                    f"At least one field is not valid: {field_paths}"
-                )

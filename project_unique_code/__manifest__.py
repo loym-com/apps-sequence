@@ -6,10 +6,6 @@
     "summary": "",
     "author": "Loym",
     "data": [
-        "data/ir_actions_server_data.xml",
-        "views/project_project_views.xml",
-        "views/project_task_views.xml",
-        "views/res_config_settings_views.xml",
     ],
     "depends": [
         "base_unique_code",
@@ -17,6 +13,6 @@
     ],
     "excludes": [""],
     "license": "LGPL-3",
-    "version": "18.0.4.0.2",
+    "version": "18.0.5.0.0",
     "website": "https://www.loym.com",
 }

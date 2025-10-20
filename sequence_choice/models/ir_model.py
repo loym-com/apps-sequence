@@ -28,36 +28,3 @@ class IrModel(models.Model):
             "1. Set this field to empty, and save.\n"
             "2. Set this field again, and save."
     )
-
-    @api.constrains("sequence_choice_field_id")
-    def set_sequences(self):
-        self.ensure_one()
-        Sequence = self.env["ir.sequence"]
-        if self.sequence_choice_field_id:
-            field = self.sequence_choice_field_id
-            if field.ttype == "boolean":
-                values = ["True", "False"]
-            elif field.ttype == "many2one":
-                values = self.env[field.relation].search([]).mapped("id")
-                values = [str(value) for value in values]
-            elif field.ttype == "selection":
-                values = field.selection_ids.mapped("value")
-            else:
-                raise ValidationError(f"Unsupported field type {field.ttype}")
-
-            for value in values:
-                code = f"{self.model}.{field.name}.{value}"
-                sequence = Sequence.search([("code", "=", code)])
-                if not sequence:
-                    if field.ttype == "many2one":
-                        name = self.env[field.relation].browse(int(value)).display_name
-                    else:
-                        name = code
-                    Sequence.create(
-                        {
-                            "name": name,
-                            "code": code,
-                            "prefix": f"{value}-",
-                            "padding": 5,
-                        }
-                    )
